@@ -9,4 +9,5 @@ import com.cc221023.arcanemind.TarotCard
 abstract class TarotDatabase : RoomDatabase() {
     abstract val dao: TarotDao
 
+
 }

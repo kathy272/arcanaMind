@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -30,11 +31,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -59,9 +60,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.room:room-common:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
+
+
+   // implementation("androidx.room:room-common:2.6.1")
+   // implementation("androidx.room:room-ktx:2.6.1")
+    //implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
 
     implementation("androidx.compose.material:material:1.4.2")
     implementation("androidx.appcompat:appcompat:1.4.1")
@@ -69,6 +72,13 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
     implementation("androidx.activity:activity-compose:1.4.0")
+
+    // Material components and navigation
+    implementation ("androidx.compose.material:material:1.4.2")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+    // ROOM
+    implementation("androidx.room:room-ktx:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

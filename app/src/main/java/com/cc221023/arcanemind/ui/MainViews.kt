@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
@@ -46,6 +48,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -58,15 +61,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -74,6 +86,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cc221023.arcanemind.ui.theme.Black
+import com.cc221023.arcanemind.ui.theme.EggShelly
+import com.cc221023.arcanemind.ui.theme.White
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -84,7 +99,7 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
-    Scaffold{
+    Scaffold(      bottomBar = {BottomNavigationBar(navController, state.value.selectedScreen)}){
 
 
         NavHost(
@@ -97,6 +112,60 @@ fun MainView(mainViewModel: MainViewModel) {
                 HomeScreen(mainViewModel)
             }
 
+        }
+    }
+}
+@Composable
+fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screens){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .drawWithContent {
+
+                val linearGradient = Brush.verticalGradient(
+                    startY = 0f,
+                    endY = 30f,
+                    colors = listOf(
+                        Gray.copy(alpha = 0f),
+                        Gray.copy(alpha = 0.2f),
+                        Gray.copy(alpha = 0.5f),
+                        Gray.copy(alpha = 0.9f)
+                    )
+                )
+                drawRect(
+                    brush = linearGradient,
+                    topLeft = Offset(0f, 0f), // Adjust the offset as needed
+                    size = Size(size.width, 10f)
+                )
+            }
+    ) {
+        BottomNavigation(
+            backgroundColor = Black,
+            contentColor = EggShelly,
+            modifier = Modifier
+                .shadow(50.dp)
+        ) {
+            NavigationBarItem(
+                selected = (selectedScreen == Screens.Home),
+                onClick = { navController.navigate(Screens.Home.route) },
+                icon = {
+                    Icon(
+                    imageVector= ImageVector.vectorResource(id = R.drawable.cardsicon), contentDescription = null) })
+
+
+
+            NavigationBarItem(
+                selected = (selectedScreen == Screens.Home),
+                onClick = { navController.navigate(Screens.Home.route) },
+                icon = {
+                    Icon(
+                        imageVector= ImageVector.vectorResource(id = R.drawable.homeicon), contentDescription = null) })
+            NavigationBarItem(
+                selected = (selectedScreen == Screens.Home),
+                onClick = { navController.navigate(Screens.Home.route) },
+                icon = {
+                    Icon(
+                        imageVector= ImageVector.vectorResource(id = R.drawable.profileicon), contentDescription = null) })
         }
     }
 }
@@ -121,7 +190,7 @@ Box(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
             .absoluteOffset(x = 0.dp, y = 20.dp),
     ){
         Text(
@@ -140,27 +209,67 @@ Box(
             modifier = Modifier
             .absoluteOffset(x = 0.dp, y =(-25).dp),
         )
-        Button(
-            onClick = { /*TODO*/ },
-            shape = RoundedCornerShape(25.dp),
+        Column (
+
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+
+            ){
+            Button(
+                onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(25.dp),
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
+                    .size(30.dp, 300.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EggShelly,
+                    contentColor = Black
+
+                ))
+            {
+
+                Text(
+                    "Daily card",textAlign = TextAlign.Center,
+
+
+                    fontSize = 24.sp,
+
+                    letterSpacing = 0.15.em,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier
+                        .absoluteOffset( y =(-100).dp)
+                    ,
+                )
+                Image(painter = painterResource(id = R.drawable.tarotcard), contentDescription = "tarot cards", modifier = Modifier
+                    .scale(7.3f)
+
+                    .absoluteOffset(x = (-7).dp, y = (4).dp)
+                )
+
+            }
+        }
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
-                .size(30.dp, 270.dp),
-            colors = ButtonDefaults.buttonColors(
+                .padding(top = 20.dp)
+                .size(60.dp, 300.dp),
 
-            ))
-            {
-                Text(
-                    buildAnnotatedString { append("Daily card")
-                    },
-                    fontSize = 20.sp,
-                    color = Color(0xFFA9A9A9),
-                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-                    modifier = Modifier
-                        .absoluteOffset(x = 0.dp, y =(-25).dp),
-                )
-        }
+
+        ){
+          Text(
+              "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
+                  "~ Benebell Wen", textAlign = TextAlign.Center,
+
+          fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
+              color = White,
+                fontSize = 16.sp,
+              lineHeight = 24.sp,
+
+          ) }
     }
+
     }
 }

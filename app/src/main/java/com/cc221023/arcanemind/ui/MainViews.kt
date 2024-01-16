@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,6 +68,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -74,6 +76,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cc221023.arcanemind.ui.theme.Black
+import com.cc221023.arcanemind.ui.theme.EggShelly
+import com.cc221023.arcanemind.ui.theme.SubheadingGray
+import com.cc221023.arcanemind.ui.theme.White
 
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -90,12 +96,17 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.Home.route
+            startDestination = Screens.Info.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
                 HomeScreen(mainViewModel)
             }
+            composable(Screens.Info.route) {
+                mainViewModel.selectScreen(Screens.Info)
+                InfoScreen(mainViewModel)
+            }
+
 
         }
     }
@@ -106,7 +117,7 @@ fun HomeScreen(mainViewModel: MainViewModel) {
 Box(
     modifier = Modifier
         .fillMaxSize()
-        .background(color = Color(0xFF161616))
+        .background(color = Black)
 ) {
     Image(
         painter = painterResource(id = R.drawable.alchemy),
@@ -128,14 +139,14 @@ Box(
             buildAnnotatedString { append("Hello, stranger!\n")
                                  },
             fontSize = 24.sp,
-            color = Color.White,
+            color = White,
             fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
         )
         Text(
             buildAnnotatedString { append("Have an arcane day!")
                                  },
             fontSize = 20.sp,
-            color = Color(0xFFA9A9A9),
+            color = SubheadingGray,
             fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
             modifier = Modifier
             .absoluteOffset(x = 0.dp, y =(-25).dp),
@@ -148,19 +159,89 @@ Box(
                 .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
                 .size(30.dp, 270.dp),
             colors = ButtonDefaults.buttonColors(
-
+                containerColor = EggShelly
             ))
             {
                 Text(
                     buildAnnotatedString { append("Daily card")
                     },
                     fontSize = 20.sp,
-                    color = Color(0xFFA9A9A9),
+                    color = SubheadingGray,
                     fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                     modifier = Modifier
                         .absoluteOffset(x = 0.dp, y =(-25).dp),
                 )
         }
     }
+    }
+}
+
+
+@Composable
+fun InfoScreen(mainViewModel: MainViewModel) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Black)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.alchemy),
+            contentDescription = "Tarot Card",
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(2.0f)
+                .alpha(0.35f)
+                .padding(16.dp)
+                .absoluteOffset(x = 20.dp, y = (-20).dp)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 25.dp, top = 50.dp, end = 20.dp, bottom = 20.dp)
+                .absoluteOffset(x = 0.dp, y = 20.dp),
+        ){
+            Text(
+                buildAnnotatedString { append("Your tarot archive\n")
+                },
+                fontSize = 24.sp,
+                color = White,
+                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+            )
+            Text(
+                buildAnnotatedString { append("Stay educated!")
+                },
+                fontSize = 20.sp,
+                color = SubheadingGray,
+                fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                modifier = Modifier
+                    .absoluteOffset(x = 0.dp, y =(-25).dp),
+            )
+            Button(
+                onClick = { /*Understanding tarot - page*/ },
+                shape = RoundedCornerShape(25.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 50.dp, end = 50.dp, top = 10.dp, bottom = 10.dp)
+                    .height(65.dp),
+
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = EggShelly,
+                    contentColor = Black,
+                    disabledContentColor = Black
+                ))
+            {
+                Text(
+                    buildAnnotatedString { append("Understanding Tarot")
+                    },
+                    color = Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier
+                        .absoluteOffset(x = 0.dp, y =(-25).dp),
+                )
+            }
+        }
     }
 }

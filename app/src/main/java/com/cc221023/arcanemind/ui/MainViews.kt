@@ -112,8 +112,10 @@ Box(
         contentDescription = "Tarot Card",
         modifier = Modifier
             .fillMaxSize()
+            .scale(2.0f)
+            .alpha(0.35f)
             .padding(16.dp)
-            .absoluteOffset(x = 0.dp, y = 0.dp)
+            .absoluteOffset(x = 20.dp, y = (-20).dp)
     )
     }
 }

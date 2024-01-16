@@ -102,18 +102,65 @@ fun MainView(mainViewModel: MainViewModel) {
 }
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel) {
+
 Box(
     modifier = Modifier
         .fillMaxSize()
-        .background(color= Color(0xFF161616))
+        .background(color = Color(0xFF161616))
 ) {
     Image(
         painter = painterResource(id = R.drawable.alchemy),
         contentDescription = "Tarot Card",
         modifier = Modifier
             .fillMaxSize()
+            .scale(2.0f)
+            .alpha(0.35f)
             .padding(16.dp)
-            .absoluteOffset(x = 0.dp, y = 0.dp)
+            .absoluteOffset(x = 20.dp, y = (-20).dp)
     )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .absoluteOffset(x = 0.dp, y = 20.dp),
+    ){
+        Text(
+            buildAnnotatedString { append("Hello, stranger!\n")
+                                 },
+            fontSize = 24.sp,
+            color = Color.White,
+            fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+        )
+        Text(
+            buildAnnotatedString { append("Have an arcane day!")
+                                 },
+            fontSize = 20.sp,
+            color = Color(0xFFA9A9A9),
+            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+            modifier = Modifier
+            .absoluteOffset(x = 0.dp, y =(-25).dp),
+        )
+        Button(
+            onClick = { /*TODO*/ },
+            shape = RoundedCornerShape(25.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
+                .size(30.dp, 270.dp),
+            colors = ButtonDefaults.buttonColors(
+
+            ))
+            {
+                Text(
+                    buildAnnotatedString { append("Daily card")
+                    },
+                    fontSize = 20.sp,
+                    color = Color(0xFFA9A9A9),
+                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                    modifier = Modifier
+                        .absoluteOffset(x = 0.dp, y =(-25).dp),
+                )
+        }
+    }
     }
 }

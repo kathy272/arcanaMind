@@ -24,6 +24,7 @@ class MainViewModel(private val dao: TarotDao): ViewModel() {
     fun selectScreen(screen: Screens){
         _mainViewState.update { it.copy(selectedScreen = screen) }
     }
+    // Account and Info missing
     fun navigateToHomeScreen(navController: NavController) {
         navController.navigate(Screens.Home.route)
     }

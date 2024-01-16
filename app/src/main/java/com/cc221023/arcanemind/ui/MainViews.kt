@@ -20,12 +20,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absoluteOffset
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -64,9 +59,9 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
-    Scaffold{
-
-
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController, state.value.selectedScreen)}
+    ){
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
@@ -96,72 +91,63 @@ fun MainView(mainViewModel: MainViewModel) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screens){
     Box(
-
         modifier = Modifier
-
             .fillMaxWidth()
-           // .drawWithContent {
-
-//                val linearGradient = Brush.verticalGradient(
-//                    startY = 0f,
-//                    endY = 30f,
-//                    colors = listOf(
-//                        Gray.copy(alpha = 0f),
-//                        Gray.copy(alpha = 0.2f),
-//                        Gray.copy(alpha = 0.5f),
-//                        Gray.copy(alpha = 0.9f)
-//                    )
-//                )
-//                drawRect(
-//                    brush = linearGradient,
-//                    topLeft = Offset(0f, 0f), // Adjust the offset as needed
-//                    size = Size(size.width, 10f)
-//                )
-           // }
+        /*
+            .drawWithContent {
+               val linearGradient = Brush.verticalGradient(
+                    startY = 0f,
+                    endY = 30f,
+                    colors = listOf(
+                        Gray.copy(alpha = 0f),
+                        Gray.copy(alpha = 0.2f),
+                        Gray.copy(alpha = 0.5f),
+                        Gray.copy(alpha = 0.9f)
+                    )
+               )
+              drawRect(
+                  brush = linearGradient,
+                  topLeft = Offset(0f, 0f), // Adjust the offset as needed
+                  size = Size(size.width, 10f)
+                )
+        }
+        */
     ) {
         BottomNavigation(
             backgroundColor = Black,
             contentColor = Black,
             modifier = Modifier
-                .shadow(50.dp)
-
-            ,
-
-
+                .shadow(50.dp),
         ) {
             NavigationBarItem(
-           colors = NavigationBarItemDefaults.colors(
-
-               selectedIconColor = EggShelly, //ändern schwarz
-                unselectedIconColor = Black,
-                indicatorColor = Black, //ändern eggshelly
-           ),
-                selected = (selectedScreen == Screens.Home),
-                onClick = { navController.navigate(Screens.Home.route) },
-                modifier = Modifier
-                    .shadow(50.dp)
-                    .padding(10.dp)
-                    //.background(color = EggShelly, shape = RoundedCornerShape(25.dp)
-                        ,
-
-                icon = {
-                    Icon(
-                    imageVector= ImageVector.vectorResource(id = R.drawable.cardsicon), contentDescription = null,
+               colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Black,
+                    unselectedIconColor = EggShelly,
+                    indicatorColor = EggShelly,
+               ),
+                    selected = (selectedScreen == Screens.Info),
+                    onClick = { navController.navigate(Screens.Info.route) },
                     modifier = Modifier
-                        .size(70.dp, 70.dp)
+                        .shadow(50.dp)
+                        .padding(10.dp),
+                    icon = {
+                        Icon(
+                            imageVector= ImageVector.vectorResource(id = R.drawable.cardsicon),
+                            contentDescription = null,
+                            modifier = Modifier
+                            .size(70.dp, 70.dp)
 
-                       )  }
+                        )
+                    }
 
-            )
-
+                )
 
 
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-
-                    selectedIconColor = EggShelly,
-                    unselectedIconColor = Black,
-                    indicatorColor = Black,
+                    selectedIconColor = Black,
+                    unselectedIconColor = EggShelly,
+                    indicatorColor = EggShelly,
                 ),
                 selected = (selectedScreen == Screens.Home),
                 onClick = { navController.navigate(Screens.Home.route) },
@@ -170,33 +156,39 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     .padding(10.dp),
                 icon = {
                     Icon(
-                        imageVector= ImageVector.vectorResource(id = R.drawable.homeicon), contentDescription = null,
-                    modifier = Modifier
-                        .size(70.dp, 70.dp)
+                        imageVector= ImageVector.vectorResource(id = R.drawable.homeicon),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(70.dp, 70.dp)
 
-                    )  })
-            NavigationBarItem(
+                        )
+                }
+            )
+
+           NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-
-                    selectedIconColor = EggShelly,
-                    unselectedIconColor = Black,
-                    indicatorColor = Black,
+                    selectedIconColor = Black,
+                    unselectedIconColor = EggShelly,
+                    indicatorColor = EggShelly,
                 ),
-                selected = (selectedScreen == Screens.Home),
-                onClick = { navController.navigate(Screens.Home.route) },
+                selected = (selectedScreen == Screens.Account),
+                onClick = { navController.navigate(Screens.Account.route) },
                 modifier = Modifier
                     .shadow(50.dp)
-                    .padding(10.dp)
-,                icon = {
-                    Icon(
+                    .padding(10.dp),
+                icon = {
+                   Icon(
                         imageVector= ImageVector.vectorResource(id = R.drawable.profileicon), contentDescription = null,
                         modifier = Modifier
                             .size(70.dp, 70.dp)
 
-                    )  })
+                    )
+                }
+           )
         }
     }
 }
+
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
@@ -222,15 +214,13 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ){
             Text(
-                buildAnnotatedString { append("Hello, stranger!\n")
-                },
+                buildAnnotatedString { append("Hello, stranger!\n") },
                 fontSize = 24.sp,
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
             )
             Text(
-                buildAnnotatedString { append("Have an arcane day!")
-                },
+                buildAnnotatedString { append("Have an arcane day!") },
                 fontSize = 20.sp,
                 color = Color(0xFFA9A9A9),
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
@@ -238,7 +228,6 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                     .absoluteOffset(x = 0.dp, y =(-25).dp),
             )
             Row (
-                //horizontalAlignment = Alignment.CenterHorizontally,
                 verticalAlignment = Alignment.CenterVertically,
             ){
                 Button(
@@ -246,9 +235,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         mainViewModel.navigateToDrawDailyScreen(navController)
                     },
                     shape = RoundedCornerShape(25.dp),
-
                     modifier = Modifier
-                        //  .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
                         .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
                         .size(260.dp, 300.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -261,55 +248,52 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         modifier = Modifier
                             .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        // verticalArrangement = Arrangement.Center,
                     ){
 
 
                         Text(
-                            "Daily card", textAlign = TextAlign.Center,
-
-
+                            "Daily card",
+                            textAlign = TextAlign.Center,
                             fontSize = 24.sp,
-
                             letterSpacing = 0.15.em,
                             fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
                             modifier = Modifier
-                                .padding(top = 20.dp)
-                            // .absoluteOffset(y = (-100).dp),
+                                .padding(top = 20.dp),
                         )
                         Spacer(modifier = Modifier.height(90.dp))
-                        Image(painter = painterResource(id = R.drawable.tarotcards), contentDescription = "tarot cards", modifier = Modifier
-                            .scale(3.0f)
-
-                            //.absoluteOffset(x = (-7).dp, y = (4).dp)
+                        Image(
+                            painter = painterResource(id = R.drawable.tarotcards),
+                            contentDescription = "tarot cards",
+                            modifier = Modifier
+                                .scale(3.0f)
                         )
                     }
 
                 }
             }
+            
             Column (
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 20.dp)
                     .size(60.dp, 300.dp),
-
-
                 ){
                 Text(
                     "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
-                            "~ Benebell Wen", textAlign = TextAlign.Center,
-
+                            "~ Benebell Wen",
+                    textAlign = TextAlign.Center,
                     fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                     color = White,
                     fontSize = 16.sp,
                     lineHeight = 30.sp,
-
-                    ) }
+                    )
+                }
         }
 
     }
 }
+
 @Composable
 fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostController) {
     Box(
@@ -334,24 +318,22 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
             Text(
-                buildAnnotatedString {
-                    append("Hello, stranger!\n")
-                },
+                buildAnnotatedString { append("Hello, stranger!\n") },
                 fontSize = 24.sp,
                 color = Color.White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
             )
             Text(
-                buildAnnotatedString {
-                    append("Have an arcane day!")
-                },
+                buildAnnotatedString { append("Have an arcane day!") },
                 fontSize = 20.sp,
                 color = Color(0xFFA9A9A9),
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y = (-25).dp),
             )
-        }}}
+        }
+    }
+}
 
 
 @Composable

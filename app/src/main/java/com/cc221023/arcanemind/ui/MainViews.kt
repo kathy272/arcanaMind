@@ -59,7 +59,9 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
-    Scaffold(      bottomBar = {BottomNavigationBar(navController, state.value.selectedScreen)}){
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navController, state.value.selectedScreen)}){
 
 
         NavHost(
@@ -69,7 +71,11 @@ fun MainView(mainViewModel: MainViewModel) {
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
-                HomeScreen(mainViewModel)
+                HomeScreen(mainViewModel, navController)
+            }
+            composable(Screens.DrawDaily.route) {
+                mainViewModel.selectScreen(Screens.DrawDaily)
+                DrawDailyScreen(mainViewModel, navController)
             }
 
         }
@@ -180,7 +186,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     }
 }
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel) {
+fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
 Box(
     modifier = Modifier
@@ -224,7 +230,9 @@ Box(
             verticalAlignment = Alignment.CenterVertically,
             ){
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    mainViewModel.navigateToDrawDailyScreen(navController)
+                },
                 shape = RoundedCornerShape(25.dp),
 
                 modifier = Modifier
@@ -290,3 +298,45 @@ Column (
 
     }
 }
+@Composable
+fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFF161616))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.alchemy),
+            contentDescription = "Tarot Card",
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(2.0f)
+                .alpha(0.35f)
+                .padding(16.dp)
+                .absoluteOffset(x = 20.dp, y = (-20).dp)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                .absoluteOffset(x = 0.dp, y = 20.dp),
+        ) {
+            Text(
+                buildAnnotatedString {
+                    append("Hello, stranger!\n")
+                },
+                fontSize = 24.sp,
+                color = Color.White,
+                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+            )
+            Text(
+                buildAnnotatedString {
+                    append("Have an arcane day!")
+                },
+                fontSize = 20.sp,
+                color = Color(0xFFA9A9A9),
+                fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                modifier = Modifier
+                    .absoluteOffset(x = 0.dp, y = (-25).dp),
+            )
+        }}}

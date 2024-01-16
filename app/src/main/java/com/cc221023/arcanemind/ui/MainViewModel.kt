@@ -27,5 +27,8 @@ class MainViewModel(private val dao: TarotDao): ViewModel() {
     fun navigateToHomeScreen(navController: NavController) {
         navController.navigate(Screens.Home.route)
     }
+    fun navigateToDrawDailyScreen(navController: NavController) {
+        navController.navigate(Screens.DrawDaily.route)
+    }
 }
 

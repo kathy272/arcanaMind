@@ -1,6 +1,5 @@
 package com.cc221023.arcanemind.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,20 +26,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
@@ -58,7 +54,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.cc221023.arcanemind.ui.theme.Black
-import com.cc221023.arcanemind.ui.theme.DarkGrey
+import com.cc221023.arcanemind.ui.theme.DarkGray
 import com.cc221023.arcanemind.ui.theme.EggShelly
 import com.cc221023.arcanemind.ui.theme.MidGray
 import com.cc221023.arcanemind.ui.theme.PitchBlack
@@ -76,7 +72,7 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.Info.route
+            startDestination = Screens.Home.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
@@ -94,6 +90,10 @@ fun MainView(mainViewModel: MainViewModel) {
             composable(Screens.DrawDaily.route) {
                 mainViewModel.selectScreen(Screens.DrawDaily)
                 DrawDailyScreen(mainViewModel, navController)
+            }
+            composable(Screens.EditCard.route) {
+                mainViewModel.selectScreen(Screens.EditCard)
+                EditCardModal(mainViewModel)
             }
 
         }
@@ -544,7 +544,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                                 .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
                                 .height(190.dp)
                                 .width(170.dp)
-                                .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                                .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                                 .zIndex(1f)
                         ) {}
                         Image(
@@ -597,7 +597,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                                     .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
                                     .height(190.dp)
                                     .width(170.dp)
-                                    .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                                     .zIndex(1f)
                             ) {}
                             Image(
@@ -802,12 +802,35 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                             tint = White
                         )
                     }
-
                 }
             }
-
         }
-
-
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditCardModal(mainViewModel: MainViewModel) {
+    val state = mainViewModel.mainViewState.collectAsState()
+
+    AlertDialog(
+        onDismissRequest = {
+            // mainViewModel.closeDialog()
+        },
+        text = {
+               // text and text fields
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    // TarotCard()
+                },
+                modifier = Modifier
+                    .padding(bottom = 10.dp),
+
+                ) {
+                Text(text = "Confirm", color = EggShelly)
+            }
+        }
+    )
 }

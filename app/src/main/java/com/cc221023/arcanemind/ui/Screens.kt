@@ -5,4 +5,5 @@ sealed class Screens (val route:String){
     object DrawDaily: Screens("drawDaily")
     object Info: Screens("info")
     object Account: Screens("account")
+    object EditCard: Screens("editCard")
 }

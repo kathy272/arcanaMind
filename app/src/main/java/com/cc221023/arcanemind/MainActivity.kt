@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer ={
         object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(db.dao) as T
+                return MainViewModel(db.tarotDao()) as T
             }
         }
 

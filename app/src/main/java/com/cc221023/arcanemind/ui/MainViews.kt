@@ -408,13 +408,13 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
                 lineHeight = 30.sp
             )
             Image(
-                painter = painterResource(id = R.drawable.handtarot),
+                painter = painterResource(id = R.drawable.tarothand),
                 contentDescription = "Tarot Card",
                 modifier = Modifier
                     .fillMaxWidth()
 
                     .scale(3.0f)
-                    .padding(top = 40.dp)
+                    .padding(top = 50.dp)
             )
 
       Column(

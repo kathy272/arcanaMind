@@ -2,6 +2,7 @@ package com.cc221023.arcanemind.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,9 +35,12 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +54,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.cc221023.arcanemind.ui.theme.Black
+import com.cc221023.arcanemind.ui.theme.DarkGrey
 import com.cc221023.arcanemind.ui.theme.EggShelly
 import com.cc221023.arcanemind.ui.theme.SubheadingGray
 import com.cc221023.arcanemind.ui.theme.White
@@ -127,7 +132,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     indicatorColor = EggShelly,
                ),
                     selected = (selectedScreen == Screens.Info),
-                    onClick = { navController.navigate(Screens.Info.route) },
+                    onClick = { navController.navigate(Screens.Home.route) },
                     modifier = Modifier
                         .shadow(50.dp)
                         .padding(10.dp),
@@ -228,58 +233,97 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y =(-25).dp),
             )
-            Row (
-                verticalAlignment = Alignment.CenterVertically,
+            Column (
+
             ){
                 Button(
                     onClick = {
                         mainViewModel.navigateToDrawDailyScreen(navController)
                     },
-                    shape = RoundedCornerShape(25.dp),
+                    shape = RoundedCornerShape(20.dp),
+
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 20.dp, start = 65.dp, end = 65.dp)
-                        .size(260.dp, 300.dp),
+                        .padding(top = 40.dp, bottom = 20.dp, start = 40.dp, end = 40.dp)
+                        .size(260.dp, 340.dp)
+
+                   ,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = EggShelly,
+                        containerColor =Color.Transparent,
                         contentColor = Black
 
                     ))
                 {
-                    Column (
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ){
 
 
-                        Text(
-                            "Daily card",
-                            textAlign = TextAlign.Center,
-                            fontSize = 24.sp,
-                            letterSpacing = 0.15.em,
-                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                            modifier = Modifier
-                                .padding(top = 20.dp),
-                        )
-                        Spacer(modifier = Modifier.height(90.dp))
-                        Image(
-                            painter = painterResource(id = R.drawable.tarotcards),
-                            contentDescription = "tarot cards",
-                            modifier = Modifier
-                                .scale(3.0f)
-                        )
-                    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+            .size(260.dp, 320.dp)
+            .background(color = Black, RoundedCornerShape(20.dp))
+            .zIndex(1f)
+
+
+
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                .size(260.dp, 320.dp)
+
+                .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                .zIndex(1f)
+
+
+
+        ) {}
+        Image(
+            painter = painterResource(id = R.drawable.tarotcardsrandom),
+            contentDescription = "tarot cards",
+
+            modifier = Modifier
+                .scale(3.0f)
+                .padding(top = 25.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                .absoluteOffset(x = 30.dp, y = (0).dp)
+                .zIndex(2f)
+
+        )
+        //Spacer(modifier = Modifier.height(90.dp))
+        Text(
+            "Daily card",
+
+            fontSize = 24.sp,
+            letterSpacing = 0.15.em,
+            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+            color = EggShelly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 200.dp, bottom = 0.dp, start = 10.dp, end = 0.dp)
+
+        )
+        Text(
+            "Draw a daily card to read your fortune!",
+
+            fontSize = 16.sp,
+            letterSpacing = 0.15.em,
+            fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
+            color = EggShelly,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 240.dp, bottom = 0.dp, start = 10.dp, end = 0.dp)
+
+        )
+    }
+
+
+
+
+
 
                 }
             }
-            
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp)
-                    .size(60.dp, 300.dp),
-                ){
+
                 Text(
                     "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
                             "~ Benebell Wen",
@@ -293,7 +337,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
         }
 
     }
-}
+
 
 @Composable
 fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostController) {

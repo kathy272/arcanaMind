@@ -45,17 +45,14 @@ import java.util.List;
         // Converts JSONObject -> Card
         private static TarotCard pluckJsonCard(JSONObject TarotCard) throws JSONException {
             return new TarotCard(
-                    TarotCard.getString("name"),
                     TarotCard.getString("name_short"),
+                    TarotCard.getString("name"),
                     TarotCard.getString("value"),
                     TarotCard.getInt("value_int"),
-                    TarotCard.getString("suit"),
-                    TarotCard.getString("arcana"),
                     TarotCard.getString("meaning_up"),
                     TarotCard.getString("meaning_rev"),
-                    TarotCard.getString("desc"),
-
-                    false);
+                    TarotCard.getString("desc")
+                    );
         }
 
         private static String toTitleCase(String s) {

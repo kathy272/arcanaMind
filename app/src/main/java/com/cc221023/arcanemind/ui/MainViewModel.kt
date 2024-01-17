@@ -1,46 +1,65 @@
 package com.cc221023.arcanemind.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.cc221023.arcanemind.CardRepository
+
 import com.cc221023.arcanemind.TarotCard
+import com.cc221023.arcanemind.TarotCardRepository
+import com.cc221023.arcanemind.Utils
 import com.cc221023.arcanemind.data.TarotDao
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.json.JSONArray
 
 
-class MainViewModel(private val dao: TarotDao): ViewModel() {
-    //private val _tarotCardState = MutableStateFlow(TarotCard("", "", "","", "" ))
-   // val tarotCardState: StateFlow<TarotCard> = _tarotCardState.asStateFlow()
+class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
+    private val _tarotCardState = MutableStateFlow(TarotCard("", "", "", 0, "", "", ""))
+    val tarotCardState: StateFlow<TarotCard> = _tarotCardState.asStateFlow()
+    private val tarotCardRepository = TarotCardRepository(context)
 
     private val _mainViewState = MutableStateFlow(MainViewState())
     val mainViewState: StateFlow<MainViewState> = _mainViewState.asStateFlow()
 
-   val tarotCard = dao.getTarotCard( 1 )
-     //val _tarotCardState.update { it.copy(tarotCard = tarotCard)}
+    val tarotCard = dao.getTarotCard(1)
+    private var tarotCards: List<TarotCard> = emptyList()
 
-//    fun fetchTarotCard() {
-//        viewModelScope.launch {
-//            try {
-//               val result= CardRepository.getTarotCard()
-//                val tarotCard = result.cards[0]
-//                withContext(Dispatchers.IO) {
-//                    dao.insert(tarotCard)
-//                }
-//                _tarotCardState.update { it.copy(tarotCard = tarotCard)}
-//            } catch (e: Exception) {
-//                Log.e("MainViewModel", "Error fetching tarot card", e)
-//            }
-//        }
-//    }
+    fun loadTarotCards() {
+        tarotCards = tarotCardRepository.getTarotCardsFromJson()
+    }
 
+    fun fetchRandomTarotCard() {
+        if (tarotCards.isNotEmpty()) {
+            val randomIndex = tarotCards.indices.random()
+            val randomCard = tarotCards[randomIndex]
+            viewModelScope.launch {
+                _tarotCardState.value = randomCard
+                Log.d("APItest", "Selected Card: $randomCard")
+
+            }
+        }
+    }
+    fun parseJsonArray(jsonArray: JSONArray): List<TarotCard> {
+        val tarotCards = mutableListOf<TarotCard>()
+
+        for (i in 0 until jsonArray.length()) {
+            val jsonCard = jsonArray.getJSONObject(i)
+            val tarotCard = Utils.pluckJsonCard(jsonCard)
+            tarotCard?.let {
+                tarotCards.add(it)
+            }
+        }
+
+        return tarotCards
+    }
+
+
+    // Navigation
 
     //Navigation
     fun selectScreen(screen: Screens){
@@ -53,6 +72,8 @@ class MainViewModel(private val dao: TarotDao): ViewModel() {
     fun navigateToDrawDailyScreen(navController: NavController) {
         navController.navigate(Screens.DrawDaily.route)
     }
+
+
 
 }
 

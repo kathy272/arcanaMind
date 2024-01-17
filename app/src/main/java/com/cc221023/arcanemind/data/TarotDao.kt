@@ -43,12 +43,8 @@ interface TarotDao {
     @Query("DELETE FROM tarot_cards")
     fun deleteAllCards()
 
-    @get:Query("SELECT * FROM tarot_cards ORDER BY id")
-    val allTarotCards: LiveData<List<TarotCard>>
+    @Query("SELECT * FROM tarot_cards ORDER BY value_int")
+    fun getAllTarotCards(): LiveData<List<TarotCard>>
 
-    @get:Query("SELECT * FROM tarot_cards WHERE id = id")
-  val getTarotCard: LiveData<TarotCard>
-
-  @Query("SELECT * FROM tarot_cards WHERE id = :id")
-    fun getTarotCard(id: Int): LiveData<TarotCard>
-}
+    @Query("SELECT * FROM tarot_cards WHERE value_int = :id")
+    fun getTarotCard(id: Int): LiveData<TarotCard>}

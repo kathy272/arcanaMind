@@ -1,6 +1,7 @@
 package com.cc221023.arcanemind
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -10,13 +11,21 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import com.cc221023.arcanemind.Utils.Companion.getJsonDataFromAsset
 
 import com.cc221023.arcanemind.data.TarotDatabase
 import com.cc221023.arcanemind.ui.MainView
 import com.cc221023.arcanemind.ui.MainViewModel
 import com.cc221023.arcanemind.ui.theme.ArcaneMindTheme
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
+
+@Suppress("UNCHECKED_CAST")
 class MainActivity : ComponentActivity() {
+
+
+
     private val db by lazy {
       Room.databaseBuilder(this, TarotDatabase::class.java, "TarotDatabase.db")
           .build()
@@ -26,7 +35,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer ={
         object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(db.tarotDao()) as T
+                return MainViewModel(db.tarotDao(),application ) as T
             }
         }
 
@@ -36,6 +45,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Log.i("data", jsonFileString.toString())
+
+
+
+
         setContent {
             ArcaneMindTheme {
                 // A surface container using the 'background' color from the theme
@@ -43,6 +57,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                    // color = MaterialTheme.colorScheme.background
                 ) {
+
                     MainView(mainViewModel)
                 }
             }

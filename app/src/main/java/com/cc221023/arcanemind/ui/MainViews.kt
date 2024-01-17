@@ -1,7 +1,9 @@
 package com.cc221023.arcanemind.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,16 +28,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -46,11 +54,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.cc221023.arcanemind.ui.theme.Black
+import com.cc221023.arcanemind.ui.theme.DarkGrey
 import com.cc221023.arcanemind.ui.theme.EggShelly
-import com.cc221023.arcanemind.ui.theme.SubheadingGray
+import com.cc221023.arcanemind.ui.theme.MidGray
+import com.cc221023.arcanemind.ui.theme.PitchBlack
 import com.cc221023.arcanemind.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +76,7 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.Home.route
+            startDestination = Screens.Info.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
@@ -216,13 +227,13 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             Text(
                 buildAnnotatedString { append("Hello, stranger!\n") },
                 fontSize = 24.sp,
-                color = Color.White,
+                color = White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
             )
             Text(
                 buildAnnotatedString { append("Have an arcane day!") },
                 fontSize = 20.sp,
-                color = Color(0xFFA9A9A9),
+                color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y =(-25).dp),
@@ -320,13 +331,13 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
             Text(
                 buildAnnotatedString { append("Hello, stranger!\n") },
                 fontSize = 24.sp,
-                color = Color.White,
+                color = White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
             )
             Text(
                 buildAnnotatedString { append("Have an arcane day!") },
                 fontSize = 20.sp,
-                color = Color(0xFFA9A9A9),
+                color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y = (-25).dp),
@@ -371,7 +382,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 buildAnnotatedString { append("Stay educated!")
                 },
                 fontSize = 22.sp,
-                color = SubheadingGray,
+                color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y =(-25).dp),
@@ -446,57 +457,169 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 Spacer(modifier = Modifier.height(34.dp))
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                    ,
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Button(
-                        onClick = { /*The minor arcana - page*/ },
-                        shape = RoundedCornerShape(30.dp),
+                    /*
+                   Button(
+                       onClick = { /*The minor arcana - page*/ },
+                       shape = RoundedCornerShape(30.dp),
+                       modifier = Modifier
+                           .height(170.dp)
+                           .width(160.dp)
+                       ,
+                       colors = ButtonDefaults.buttonColors(
+                           containerColor = EggShelly,
+                           contentColor = Black,
+                           disabledContentColor = Black
+                       ),
+                   )
+                   {
+                       Text(
+                           buildAnnotatedString { append("The minor arcana")
+                           },
+                           color = Black,
+                           textAlign = TextAlign.Center,
+                           fontSize = 20.sp,
+                           fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                           modifier = Modifier
+                       )
+                   }
+                   Button(
+                       onClick = { /*The major arcana - page*/ },
+                       shape = RoundedCornerShape(30.dp),
+                       modifier = Modifier
+                           .height(170.dp)
+                           .width(160.dp)
+                           .background(
+                               brush = Brush.verticalGradient(
+                                   colors = listOf(Black, PitchBlack)
+                               )
+                           ),
+                       colors = ButtonDefaults.buttonColors(
+                           containerColor = Color.Transparent,
+                           contentColor = Black,
+                           disabledContentColor = Black
+                       ),
+                   )
+                   {
+                       Text(
+                           buildAnnotatedString { append("The major arcana")
+                           },
+                           color = Black,
+                           textAlign = TextAlign.Center,
+                           fontSize = 20.sp,
+                           fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                           modifier = Modifier
+                       )
+                   }
+               }
+               */
+                Button(
+                    onClick = { /*The minor arcana - page*/ },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .height(195.dp)
+                        .width(165.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor =Color.Transparent,
+                        contentColor = Black
+                    ))
+                {
+                    Box(
                         modifier = Modifier
-                            .height(170.dp)
-                            .width(160.dp)
-                        ,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = EggShelly,
-                            contentColor = Black,
-                            disabledContentColor = Black
-                        ),
-                    )
-                    {
+                            .fillMaxWidth()
+                            .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                            .height(190.dp)
+                            .width(170.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                colors = listOf(Black, PitchBlack)
+                            ), RoundedCornerShape(20.dp))
+                            .zIndex(1f)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                                .height(190.dp)
+                                .width(170.dp)
+                                .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                                .zIndex(1f)
+                        ) {}
+                        Image(
+                            painter = painterResource(id = R.drawable.tarotcards),
+                            contentDescription = "tarot cards",
+                            modifier = Modifier
+                                .scale(1.2f)
+                                .absoluteOffset(x = 20.dp, y = (-18).dp)
+                                .zIndex(2f)
+                        )
+                        //Spacer(modifier = Modifier.height(90.dp))
                         Text(
-                            buildAnnotatedString { append("The minor arcana")
-                            },
-                            color = Black,
-                            textAlign = TextAlign.Center,
+                            "The minor arcana",
                             fontSize = 20.sp,
                             fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            color = EggShelly,
                             modifier = Modifier
+                                .fillMaxWidth()
+                                .absoluteOffset(x = 15.dp, y = 120.dp),
+                            textAlign = TextAlign.Start
                         )
+                    }
                     }
                     Button(
                         onClick = { /*The major arcana - page*/ },
-                        shape = RoundedCornerShape(30.dp),
+                        shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .height(170.dp)
-                            .width(160.dp)
-                        ,
+                            .height(195.dp)
+                            .width(170.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = EggShelly,
-                            contentColor = Black,
-                            disabledContentColor = Black
-                        ),
-                    )
+                            containerColor =Color.Transparent,
+                            contentColor = Black
+                        ))
                     {
-                        Text(
-                            buildAnnotatedString { append("The major arcana")
-                            },
-                            color = Black,
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        Box(
                             modifier = Modifier
-                        )
+                                .fillMaxWidth()
+                                .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                                .height(190.dp)
+                                .width(170.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Black, PitchBlack)
+                                    ), RoundedCornerShape(20.dp))
+                                .zIndex(1f)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
+                                    .height(190.dp)
+                                    .width(170.dp)
+                                    .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                                    .zIndex(1f)
+                            ) {}
+                            Image(
+                                painter = painterResource(id = R.drawable.fourcards),
+                                contentDescription = "tarot cards",
+                                modifier = Modifier
+                                    .scale(1.4f)
+                                    .absoluteOffset(x = 12.dp, y = (-14).dp)
+                                    .zIndex(2f)
+                            )
+                            //Spacer(modifier = Modifier.height(90.dp))
+                            Text(
+                                "The major arcana",
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                                color = EggShelly,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .absoluteOffset(x = 15.dp, y = 120.dp),
+                                textAlign = TextAlign.Start
+                            )
+                        }
                     }
                 }
             }
@@ -507,4 +630,184 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 @Composable
 fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFF161616))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.alchemy),
+            contentDescription = "Tarot Card",
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(2.0f)
+                .alpha(0.35f)
+                .padding(16.dp)
+                .absoluteOffset(x = 20.dp, y = (-20).dp)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                .absoluteOffset(x = 0.dp, y = 20.dp),
+        ) {
+            Text(
+                buildAnnotatedString { append("Hello, stranger!\n") },
+                fontSize = 24.sp,
+                color = White,
+                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+            )
+            Text(
+                buildAnnotatedString { append("Have an arcane day!") },
+                fontSize = 20.sp,
+                color = MidGray,
+                fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                modifier = Modifier
+                    .absoluteOffset(x = 0.dp, y = (-25).dp),
+            )
+            Spacer(modifier = Modifier.height(35.dp))
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ){
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            buildAnnotatedString { append("Lorem ipsum\n") },
+                            fontSize = 16.sp,
+                            color = MidGray,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                        )
+                        Text(
+                            buildAnnotatedString { append("Text") },
+                            fontSize = 22.sp,
+                            color = White,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            modifier = Modifier
+                                .absoluteOffset(0.dp, (-18).dp)
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            buildAnnotatedString { append("Lorem ipsum\n") },
+                            fontSize = 16.sp,
+                            color = MidGray,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                        )
+                        Text(
+                            buildAnnotatedString { append("Text") },
+                            fontSize = 22.sp,
+                            color = White,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            modifier = Modifier
+                                .absoluteOffset(0.dp, (-18).dp)
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            buildAnnotatedString { append("Lorem ipsum\n") },
+                            fontSize = 16.sp,
+                            color = MidGray,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                        )
+                        Text(
+                            buildAnnotatedString { append("Text") },
+                            fontSize = 22.sp,
+                            color = White,
+                            textAlign = TextAlign.Center,
+                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            modifier = Modifier
+                                .absoluteOffset(0.dp, (-18).dp)
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(15.dp))
+                Image(painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        //.padding(16.dp)
+                        //.absoluteOffset(x = 20.dp, y = (-20).dp)
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Bottom,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier
+                        ) {
+                                Text(
+                                    buildAnnotatedString { append("Card Name") },
+                                    fontSize = 22.sp,
+                                    color = White,
+                                    fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+                                    textAlign = TextAlign.Start
+                                )
+                                Spacer(modifier = Modifier.width(20.dp))
+                                Text(
+                                    buildAnnotatedString { append("14.01.2024") },
+                                    fontSize = 14.sp,
+                                    color = White,
+                                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                                    textAlign = TextAlign.Start,
+                                    modifier = Modifier.absoluteOffset(0.dp, (-3).dp)
+                                )
+                        }
+                        Text(
+                            buildAnnotatedString { append("I need to be mindful of...\n") },
+                            fontSize = 16.sp,
+                            color = White,
+                            textAlign = TextAlign.Start,
+                            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            // delete element
+                        }
+                    ) {
+                        Icon(
+                            imageVector= ImageVector.vectorResource(id = R.drawable.deletebin),
+                            contentDescription = "delete button",
+                            modifier = Modifier
+                                .size(40.dp, 40.dp)
+                                .absoluteOffset(0.dp, 2.dp),
+                            tint = White
+                        )
+                    }
+
+                }
+            }
+
+        }
+
+
+    }
 }

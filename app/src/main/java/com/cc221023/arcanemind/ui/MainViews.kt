@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.cc221023.arcanemind.ui.theme.Black
@@ -65,7 +66,7 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.Home.route
+            startDestination = Screens.DrawDaily.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
@@ -298,7 +299,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostController) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(color = Color(0xFF161616))
     ) {
         Image(
@@ -311,29 +312,128 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
         )
-        Column(
+    }
+        Row(
+            horizontalArrangement = Arrangement.Start,
             modifier = Modifier
+                .zIndex(2f)
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
-                .absoluteOffset(x = 0.dp, y = 20.dp),
+                .padding(start = 5.dp, end = 25.dp, bottom = 25.dp)
+                .absoluteOffset(x = 0.dp, y = 10.dp),
         ) {
-            Text(
-                buildAnnotatedString { append("Hello, stranger!\n") },
-                fontSize = 24.sp,
-                color = Color.White,
-                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-            )
-            Text(
-                buildAnnotatedString { append("Have an arcane day!") },
-                fontSize = 20.sp,
-                color = Color(0xFFA9A9A9),
-                fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+            Button(onClick = { navController.navigate(Screens.Home.route)}, colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = EggShelly,
+
+            )) {
+
+
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.arrowback),
+                contentDescription = null,
+                tint = EggShelly,
                 modifier = Modifier
-                    .absoluteOffset(x = 0.dp, y = (-25).dp),
+                    .size(50.dp, 50.dp)
+
+            )}
+            Text(
+                "Draw Daily", textAlign = TextAlign.Center, color = EggShelly,
+                fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+                fontSize = 24.sp,
+                letterSpacing = 0.15.em,
+                modifier = Modifier
+                    .padding(start = 30.dp, top = 15.dp)
             )
         }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .zIndex(1f)
+                .fillMaxWidth()
+                .padding(top = 20.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
+               // .size(60.dp, 500.dp),
+
+            ) {
+            Text(
+                text = "Draw your daily card and see how the day goes!",
+                color = White,
+                fontSize = 24.sp,
+                fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+                modifier = Modifier.padding(top = 100.dp, start = 25.dp),
+                textAlign = TextAlign.Center,
+                lineHeight = 30.sp
+            )
+            Image(
+                painter = painterResource(id = R.drawable.handtarot),
+                contentDescription = "Tarot Card",
+                modifier = Modifier
+                    .fillMaxWidth()
+
+                    .scale(3.0f)
+                    .padding(top = 40.dp)
+            )
+
+      Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 120.dp, start = 25.dp, end = 25.dp)
+                // .size(60.dp, 500.dp),
+      ) {
+          Text(
+              text = "Your deck today ",
+              color = White,
+              fontSize = 24.sp,
+              fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+              textAlign = TextAlign.Center,
+              modifier = Modifier
+                  .padding(top = 20.dp, start = 25.dp, end = 25.dp)
+                  .fillMaxWidth()
+          )
+
+          Image(
+              painter = painterResource(id = R.drawable.line),
+              contentDescription = "line",
+              modifier = Modifier
+                  .size(400.dp, 100.dp)
+                  .padding(top=10.dp)
+
+          )
+
+            Box(
+                modifier = Modifier
+                    .padding(top= 25.dp, start = 5.dp, end = 5.dp)
+
+
+            ) {
+                Button(
+                    onClick = { /*TODO*/ },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(65.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EggShelly,
+                        contentColor = Black,
+                        disabledContentColor = Black
+                    ),
+                )
+                {
+                    Text(
+                        buildAnnotatedString {
+                            append("Draw a card")
+                        },
+                        color = Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                    )
+                }
+            }
+        }}
     }
-}
+
 
 
 @Composable

@@ -8,14 +8,12 @@ import androidx.navigation.NavController
 
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.TarotCardRepository
-import com.cc221023.arcanemind.Utils
 import com.cc221023.arcanemind.data.TarotDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 
 
 class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
@@ -25,41 +23,21 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
 
     private val _mainViewState = MutableStateFlow(MainViewState())
     val mainViewState: StateFlow<MainViewState> = _mainViewState.asStateFlow()
-
-    val tarotCard = dao.getTarotCard(1)
     private var tarotCards: List<TarotCard> = emptyList()
 
-    fun loadTarotCards() {
+    init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()
     }
-
-    fun fetchRandomTarotCard() {
+    fun fetchRandomTarotCard() { //to fetch a random card
         if (tarotCards.isNotEmpty()) {
             val randomIndex = tarotCards.indices.random()
             val randomCard = tarotCards[randomIndex]
             viewModelScope.launch {
                 _tarotCardState.value = randomCard
                 Log.d("APItest", "Selected Card: $randomCard")
-
             }
         }
     }
-    fun parseJsonArray(jsonArray: JSONArray): List<TarotCard> {
-        val tarotCards = mutableListOf<TarotCard>()
-
-        for (i in 0 until jsonArray.length()) {
-            val jsonCard = jsonArray.getJSONObject(i)
-            val tarotCard = Utils.pluckJsonCard(jsonCard)
-            tarotCard?.let {
-                tarotCards.add(it)
-            }
-        }
-
-        return tarotCards
-    }
-
-
-    // Navigation
 
     //Navigation
     fun selectScreen(screen: Screens){
@@ -72,9 +50,6 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     fun navigateToDrawDailyScreen(navController: NavController) {
         navController.navigate(Screens.DrawDaily.route)
     }
-
-
-
 }
 
 

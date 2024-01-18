@@ -1,6 +1,5 @@
 package com.cc221023.arcanemind.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -28,8 +27,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,7 +37,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,20 +58,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-
-
 import com.cc221023.arcanemind.TarotCard
-import com.cc221023.arcanemind.Utils
-import com.cc221023.arcanemind.Utils.Companion.pluckJsonCard
-import com.cc221023.arcanemind.data.TarotDao
 import com.cc221023.arcanemind.ui.theme.Black
 import com.cc221023.arcanemind.ui.theme.DarkGrey
 import com.cc221023.arcanemind.ui.theme.EggShelly
 import com.cc221023.arcanemind.ui.theme.SubheadingGray
 import com.cc221023.arcanemind.ui.theme.White
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import org.json.JSONArray
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +72,6 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
-
     Scaffold(
 
         bottomBar = { BottomNavigationBar(navController, state.value.selectedScreen)}
@@ -89,7 +79,7 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.APItest.route
+            startDestination = Screens.DrawDaily.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
@@ -108,13 +98,6 @@ fun MainView(mainViewModel: MainViewModel) {
                 mainViewModel.selectScreen(Screens.DrawDaily)
                 DrawDailyScreen(mainViewModel, navController)
             }
-            composable(Screens.APItest.route) {
-                mainViewModel.selectScreen(Screens.APItest)
-                APItest(mainViewModel, navController)
-            }
-
-
-
         }
     }
 }
@@ -123,25 +106,6 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     Box(
         modifier = Modifier
             .fillMaxWidth()
-        /*
-            .drawWithContent {
-               val linearGradient = Brush.verticalGradient(
-                    startY = 0f,
-                    endY = 30f,
-                    colors = listOf(
-                        Gray.copy(alpha = 0f),
-                        Gray.copy(alpha = 0.2f),
-                        Gray.copy(alpha = 0.5f),
-                        Gray.copy(alpha = 0.9f)
-                    )
-               )
-              drawRect(
-                  brush = linearGradient,
-                  topLeft = Offset(0f, 0f), // Adjust the offset as needed
-                  size = Size(size.width, 10f)
-                )
-        }
-        */
     ) {
         BottomNavigation(
             backgroundColor = Black,
@@ -166,13 +130,9 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                             contentDescription = null,
                             modifier = Modifier
                             .size(70.dp, 70.dp)
-
                         )
                     }
-
                 )
-
-
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Black,
@@ -190,11 +150,9 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         contentDescription = null,
                         modifier = Modifier
                             .size(70.dp, 70.dp)
-
                         )
                 }
             )
-
            NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Black,
@@ -211,31 +169,12 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         imageVector= ImageVector.vectorResource(id = R.drawable.profileicon), contentDescription = null,
                         modifier = Modifier
                             .size(70.dp, 70.dp)
-
                     )
                 }
            )
         }
     }
 }
-
-@Composable
-fun GetData(applicationContext: Context) {
-    val jsonFileString= Utils.getJsonDataFromAsset(applicationContext, "card_data.json")
-
-    val gson = Gson()
-    val listCardType = object : TypeToken<List<TarotCard>>() {}.type
-    var cards: List<TarotCard> = gson.fromJson(jsonFileString, listCardType)
-    cards.forEachIndexed { idx, TarotCard ->
-        Log.i("data", "> Item $idx:\n$TarotCard")
-    }
-
-    Log.d("data", jsonFileString.toString())
-}
-
-
-
-
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
@@ -295,8 +234,6 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
                     ))
                 {
-
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -304,21 +241,14 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             .size(260.dp, 320.dp)
             .background(color = Black, RoundedCornerShape(20.dp))
             .zIndex(1f)
-
-
-
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
                 .size(260.dp, 320.dp)
-
                 .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
                 .zIndex(1f)
-
-
-
         ) {}
         Image(
             painter = painterResource(id = R.drawable.tarotcardsrandom),
@@ -329,7 +259,6 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .padding(top = 25.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
                 .absoluteOffset(x = 30.dp, y = (0).dp)
                 .zIndex(2f)
-
         )
         //Spacer(modifier = Modifier.height(90.dp))
         Text(
@@ -357,12 +286,6 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
         )
     }
-
-
-
-
-
-
                 }
             }
 
@@ -379,10 +302,15 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
         }
 
     }
-
-
 @Composable
-fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+fun DrawDailyScreen(
+    mainViewModel: MainViewModel,
+    navController: NavHostController,
+    context: Context = LocalContext.current
+) {
+    val randomCard = remember { mutableStateOf<TarotCard?>(null) }
+    val scrollState = rememberScrollState()
+    val randomCardState by mainViewModel.tarotCardState.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -493,7 +421,8 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
 
             ) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {                mainViewModel.fetchRandomTarotCard()
+                    },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -518,109 +447,39 @@ fun DrawDailyScreen(mainViewModel: MainViewModel, navController: NavHostControll
                 }
             }
         }}
-    }
-@Composable
-fun DrawRandomCard(mainViewModel: MainViewModel) {
-    Button(onClick = {  }) {
-        Text("Draw a Random Card")
-    }
-}
-
-@SuppressLint("StateFlowValueCalledInComposition")
-@Composable
-fun APItest(
-    mainViewModel: MainViewModel,
-    navController: NavHostController,
-    context: Context = LocalContext.current
-) {
-    val randomCard = remember { mutableStateOf<TarotCard?>(null) }
-
-    val randomCardState by mainViewModel.tarotCardState.collectAsState()
-
-    Box(
+    Column (
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF161616))
-    ) {
-        // Background Image
-        Image(
-            painter = painterResource(id = R.drawable.alchemy),
-            contentDescription = "Tarot Card",
-            modifier = Modifier
-                .fillMaxSize()
-                .scale(2.0f)
-                .alpha(0.35f)
-                .padding(16.dp)
-                .absoluteOffset(x = 20.dp, y = (-20).dp)
-        )
-    }
+            .padding(top = 200.dp, start = 25.dp, end = 25.dp)
+            .background(color = Black, RoundedCornerShape(20.dp))
+            .size(60.dp, 300.dp)
+            .zIndex(1f)
+            .verticalScroll(state = scrollState),
 
-    Box(
-        modifier = Modifier
-            .padding(top = 250.dp, start = 5.dp, end = 5.dp)
-    ) {
-        Button(
-            onClick = {
-                mainViewModel.loadTarotCards()
-                mainViewModel.fetchRandomTarotCard()
-            },
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(65.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = EggShelly,
-                contentColor = Black,
-                disabledContentColor = Black
-            ),
-        ) {
-            Text(
-                buildAnnotatedString {
-                    append("Draw a card")
-                },
-                color = Black,
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                modifier = Modifier
-            )
-        }}
-Column (
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 350.dp, start = 25.dp, end = 25.dp)
-        .background(color = Color.Gray, RoundedCornerShape(20.dp))
-        .size(60.dp, 300.dp),
-
-){
-
+        ){
 
         // Display the randomly drawn card
         randomCardState?.let { randomCard ->
             Log.d("APItest", "Random Card is not null: $randomCard")
 
+            Text(
+                text = " ${randomCard.name}",
+                color = White,
+                fontSize = 24.sp,
+                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(10.dp)
+            )
 
             Text(
-                    text = "Random Card: ${randomCard.name}",
-                    color = White,
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-
-                Text(
-                    text = "Description: ${randomCard.desc}",
-                    color = White,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center
-                )
-
-            }
-
-
-}}
-
+                text = " ${randomCard.desc}",
+                color = White,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+    }}
 
 @Composable
 fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {

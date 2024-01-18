@@ -9,25 +9,6 @@ import androidx.room.Update
 import com.cc221023.arcanemind.TarotCard
 import kotlinx.coroutines.flow.Flow
 
-//@Dao
-//interface TarotDao {
-//    @Insert
-//    suspend fun insert(tarot_card: TarotCard)
-//
-//    @Update
-//    suspend fun update(tarot_card: TarotCard): Any?
-//
-//    @Delete
-//    suspend fun delete(tarot_card: TarotCard): Any?
-//
-//    @Query("SELECT * FROM tarot_cards ORDER BY id DESC")
-//    fun getAllTarotCards(): Flow<List<TarotCard>>
-//
-//    @Query("SELECT * FROM tarot_cards WHERE id = :id")
-//    fun getTarotCard(id: Int): LiveData<TarotCard>
-//
-//
-//}
 
 @Dao
 interface TarotDao {
@@ -43,8 +24,8 @@ interface TarotDao {
     @Query("DELETE FROM tarot_cards")
     fun deleteAllCards()
 
-    @Query("SELECT * FROM tarot_cards ORDER BY value_int")
+    @Query("SELECT * FROM tarot_cards ORDER BY id")
     fun getAllTarotCards(): LiveData<List<TarotCard>>
 
-    @Query("SELECT * FROM tarot_cards WHERE value_int = :id")
+    @Query("SELECT * FROM tarot_cards WHERE id = :id")
     fun getTarotCard(id: Int): LiveData<TarotCard>}

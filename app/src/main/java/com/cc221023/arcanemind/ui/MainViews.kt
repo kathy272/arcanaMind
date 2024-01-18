@@ -543,7 +543,7 @@ fun DisplayDailyResultScreen(
             )
 
             Text(
-                text = " ${randomCard.desc}",
+                text = " ${randomCard.meaningUp}",
                 color = White,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,

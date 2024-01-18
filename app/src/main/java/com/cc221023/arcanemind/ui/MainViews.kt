@@ -618,43 +618,63 @@ fun DisplayDailyResultScreen(
         )
     }
     Column (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 100.dp, start = 25.dp, end = 25.dp)
-            .background(color = Black, RoundedCornerShape(20.dp))
-            .size(60.dp, 300.dp)
-            .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
 
-            .verticalScroll(state = scrollState),
 
-        ){
+        ) {
 
         // Display the randomly drawn card
         randomCardState?.let { randomCard ->
             //Log.d("APItest", "Random Card is not null: $randomCard")
+            Box(
+
+                modifier =Modifier
+                    .clip(shape = RoundedCornerShape(10.dp))
+                    .size(400.dp,400.dp)
+                    .padding(top = 100.dp, bottom = 10.dp, start = 110.dp, end = 110.dp)
+                    .background(color = Color.White, RoundedCornerShape(20.dp))
+
+            ){
             AsyncImage(
                 model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
-                contentDescription = "random card",
-            )
+                contentDescription = "${randomCardState?.desc}",
+                modifier = Modifier
+                    .fillMaxWidth()
+
+                    .clip(shape = RoundedCornerShape(10.dp))
+                    .padding(top = 10.dp, bottom = 10.dp, start = 0.dp, end = 0.dp)
+                    .zIndex(1f)
+            )}
             //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
-            Text(
-                text = " ${randomCard.name} ",
-                color = White,
-                fontSize = 24.sp,
-                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(10.dp)
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 100.dp, start = 25.dp, end = 25.dp)
+                    .background(color = Black, RoundedCornerShape(20.dp))
+                    .size(60.dp, 300.dp)
+                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
 
-            Text(
-                text = " ${randomCard.meaningUp}",
-                color = White,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(20.dp)
-            )
-        }}
+                    .verticalScroll(state = scrollState),
 
+                ) {
+                Text(
+                    text = " ${randomCard.name} ",
+                    color = White,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(10.dp)
+                )
+
+                Text(
+                    text = " ${randomCard.meaningUp}",
+                    color = White,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(20.dp)
+                )
+            }
+        }
+    }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -707,14 +727,14 @@ fun DisplayDailyResultScreen(
                 Button(
                     onClick = {
                               mainViewModel.saveRandomCard(RandomDaily(
-                                  name = randomCardState?.name ?: "",
+                                  name = randomCardState.name ?: "",
                                   id = 0,
-                                  meaningUp = randomCardState?.meaningUp ?: "",
-                                  desc = randomCardState?.desc ?: "",
+                                  meaningUp = randomCardState.meaningUp ?: "",
+                                  desc = randomCardState.desc ?: "",
                                   comment = comment.text,
-                                  name_short = randomCardState?.nameShort ?: "",
-                                    value_int = randomCardState?.value?.toInt() ?: 0,
-                                  imgUrl ="https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg"
+                                  name_short = randomCardState.nameShort ?: "",
+
+                                  imgUrl ="https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg"
                               )) // Save the card to the database
                         navController.navigate(Screens.Home.route)
                     },

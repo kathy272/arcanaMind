@@ -10,8 +10,8 @@ data class TarotCard(
     val type: String,
     val nameShort: String,
     val name: String,
-    val value: String,
-    @PrimaryKey(autoGenerate = false)
+    val valueString: String,
+    @PrimaryKey(autoGenerate = true)
     val id: Int, // Change the type to Int
     val meaningUp: String,
     val meaningRev: String,

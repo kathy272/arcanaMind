@@ -6,12 +6,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "daily_cards")
 data class RandomDaily (
     val name: String = "",
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val meaningUp: String = "",
     val desc: String = "",
     val comment: String = "",
     val name_short: String = "",
-    val value_int: Int = 0,
     val imgUrl: String = ""
 )

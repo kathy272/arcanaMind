@@ -7,4 +7,5 @@ sealed class Screens (val route:String){
     object Account: Screens("account")
     object DrawDailyResult: Screens("drawDailyResult")
 
+    object EditCard: Screens("editCard")
 }

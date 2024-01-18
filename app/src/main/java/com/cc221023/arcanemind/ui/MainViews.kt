@@ -37,11 +37,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -97,6 +100,10 @@ fun MainView(mainViewModel: MainViewModel) {
             composable(Screens.DrawDaily.route) {
                 mainViewModel.selectScreen(Screens.DrawDaily)
                 DrawDailyScreen(mainViewModel, navController)
+            }
+            composable(Screens.DrawDailyResult.route) {
+                mainViewModel.selectScreen(Screens.DrawDailyResult)
+                DisplayDailyResultScreen(mainViewModel, navController)
             }
         }
     }
@@ -351,7 +358,7 @@ fun DrawDailyScreen(
 
             )}
             Text(
-                "Draw Daily", textAlign = TextAlign.Center, color = EggShelly,
+                "Your Draw", textAlign = TextAlign.Center, color = EggShelly,
                 fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
                 fontSize = 24.sp,
                 letterSpacing = 0.15.em,
@@ -422,6 +429,7 @@ fun DrawDailyScreen(
             ) {
                 Button(
                     onClick = {                mainViewModel.fetchRandomTarotCard()
+                        navController.navigate(Screens.DrawDailyResult.route)
                     },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
@@ -447,20 +455,83 @@ fun DrawDailyScreen(
                 }
             }
         }}
+
+    }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DisplayDailyResultScreen(
+    mainViewModel: MainViewModel,
+    navController: NavHostController,
+    context: Context = LocalContext.current
+) {
+    val randomCard = remember { mutableStateOf<TarotCard?>(null) }
+    val scrollState = rememberScrollState()
+    val randomCardState by mainViewModel.tarotCardState.collectAsState()
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color(0xFF161616))
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.alchemy),
+            contentDescription = "Tarot Card",
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(2.0f)
+                .alpha(0.35f)
+                .padding(16.dp)
+                .absoluteOffset(x = 20.dp, y = (-20).dp)
+        )
+    }
+    Row(
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier
+            .zIndex(2f)
+            .fillMaxSize()
+            .padding(start = 5.dp, end = 25.dp, bottom = 25.dp)
+            .absoluteOffset(x = 0.dp, y = 10.dp),
+    ) {
+        Button(onClick = { navController.navigate(Screens.Home.route)}, colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = EggShelly,
+
+            )) {
+
+
+            Icon(
+                imageVector = ImageVector.vectorResource(id = R.drawable.arrowback),
+                contentDescription = null,
+                tint = EggShelly,
+                modifier = Modifier
+                    .size(50.dp, 50.dp)
+
+            )}
+        Text(
+            "Draw Daily", textAlign = TextAlign.Center, color = EggShelly,
+            fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+            fontSize = 24.sp,
+            letterSpacing = 0.15.em,
+            modifier = Modifier
+                .padding(start = 30.dp, top = 15.dp)
+        )
+    }
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 200.dp, start = 25.dp, end = 25.dp)
+            .padding(top = 100.dp, start = 25.dp, end = 25.dp)
             .background(color = Black, RoundedCornerShape(20.dp))
             .size(60.dp, 300.dp)
-            .zIndex(1f)
+            .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+
             .verticalScroll(state = scrollState),
 
         ){
 
         // Display the randomly drawn card
         randomCardState?.let { randomCard ->
-            Log.d("APItest", "Random Card is not null: $randomCard")
+            //Log.d("APItest", "Random Card is not null: $randomCard")
 
             Text(
                 text = " ${randomCard.name}",
@@ -478,8 +549,85 @@ fun DrawDailyScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(20.dp)
             )
-        }
-    }}
+        }}
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 200.dp, start = 25.dp, end = 25.dp)
+
+            // .size(60.dp, 500.dp),
+        ) {
+            Spacer(modifier = Modifier.height(200.dp))
+
+            Image(
+                painter = painterResource(id = R.drawable.line),
+                contentDescription = "line",
+                modifier = Modifier
+                    .size(400.dp, 100.dp)
+                    .padding(top = 10.dp)
+
+            )
+            Column (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 0.dp, start = 0.dp, end = 0.dp)
+                    .background(color = Black, RoundedCornerShape(20.dp))
+
+                    .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+
+                    .verticalScroll(state = scrollState),
+
+                ){
+                Text(text = "Your thoughts:" , color = White, fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)), textAlign = TextAlign.Center, modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 10.dp, bottom = 10.dp))
+            TextField(
+                value = "",
+//                onValueChange = { newText -> content = newText },
+                onValueChange = { },
+                label = { Text(text = "Add your interpretation...") },
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(25.dp))
+                    .fillMaxWidth()
+                    .padding(20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
+                    .size(60.dp, 120.dp)
+                    ,
+                colors = TextFieldDefaults.textFieldColors(containerColor = White)
+            )}
+            Box(
+                modifier = Modifier
+                    .padding(top= 25.dp, start = 5.dp, end = 5.dp)
+
+
+            ) {
+                Button(
+                    onClick = {
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(65.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EggShelly,
+                        contentColor = Black,
+                        disabledContentColor = Black
+                    ),
+                )
+                {
+                    Text(
+                        buildAnnotatedString {
+                            append("Save and exit")
+                        },
+                        color = Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                    )
+                }
+            }
+        }}
+
 
 @Composable
 fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {

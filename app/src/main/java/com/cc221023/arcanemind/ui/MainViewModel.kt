@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.cc221023.arcanemind.RandomDaily
 
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.TarotCardRepository
@@ -39,6 +40,12 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
         }
     }
 
+    fun saveRandomCard(tarotCard: RandomDaily) {
+        viewModelScope.launch {
+            dao.insert(tarotCard)
+            Log.d("APItest", "Saved Card: $tarotCard")
+        }
+    }
     //Navigation
     fun selectScreen(screen: Screens){
         _mainViewState.update { it.copy(selectedScreen = screen) }

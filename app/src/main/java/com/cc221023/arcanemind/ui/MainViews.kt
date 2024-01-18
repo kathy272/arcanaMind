@@ -45,6 +45,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -59,12 +61,14 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.ui.theme.Black
 import com.cc221023.arcanemind.ui.theme.DarkGray
@@ -525,6 +529,9 @@ fun DisplayDailyResultScreen(
     navController: NavHostController,
     context: Context = LocalContext.current
 ) {
+    var comment by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+
+
     val randomCard = remember { mutableStateOf<TarotCard?>(null) }
     val scrollState = rememberScrollState()
     val randomCardState by mainViewModel.tarotCardState.collectAsState()
@@ -641,9 +648,9 @@ fun DisplayDailyResultScreen(
                 ){
                 Text(text = "Your thoughts:" , color = White, fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)), textAlign = TextAlign.Center, modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 10.dp, bottom = 10.dp))
             TextField(
-                value = "",
+                value = comment,
 //                onValueChange = { newText -> content = newText },
-                onValueChange = { },
+                onValueChange = { newText -> comment = newText },
                 label = { Text(text = "Add your interpretation...") },
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(25.dp))
@@ -661,6 +668,14 @@ fun DisplayDailyResultScreen(
             ) {
                 Button(
                     onClick = {
+                              mainViewModel.saveRandomCard(RandomDaily(
+                                  name = randomCardState?.name ?: "",
+                                  id = randomCardState?.id ?: 0,
+                                  meaningUp = randomCardState?.meaningUp ?: "",
+                                  desc = randomCardState?.desc ?: "",
+                                  comment = comment.text
+                              )) // Save the card to the database
+                        navController.navigate(Screens.Home.route)
                     },
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier

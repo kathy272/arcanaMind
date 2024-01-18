@@ -57,6 +57,13 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     fun navigateToDrawDailyScreen(navController: NavController) {
         navController.navigate(Screens.DrawDaily.route)
     }
+
+    fun navigateToMinorArcanaScreen(navController: NavController){
+        navController.navigate((Screens.MinorArcana.route))
+    }
+    fun navigateToMajorArcanaScreen(navController: NavController){
+        navController.navigate((Screens.MajorArcana.route))
+    }
 }
 
 

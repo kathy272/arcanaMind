@@ -16,24 +16,22 @@ import com.cc221023.arcanemind.ui.MainView
 import com.cc221023.arcanemind.ui.MainViewModel
 import com.cc221023.arcanemind.ui.theme.ArcaneMindTheme
 
+
+
 class MainActivity : ComponentActivity() {
     private val db by lazy {
       Room.databaseBuilder(this, TarotDatabase::class.java, "TarotDatabase.db")
           .build()
     }
-
     private val mainViewModel by viewModels<MainViewModel>(
         factoryProducer ={
         object: ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(db.dao) as T
+                return MainViewModel(db.tarotDao(),application ) as T
             }
         }
-
-
     }
             )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -43,6 +41,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                    // color = MaterialTheme.colorScheme.background
                 ) {
+
                     MainView(mainViewModel)
                 }
             }

@@ -1,6 +1,10 @@
 package com.cc221023.arcanemind.ui
 
-data class MainViewState (
-    val selectedScreen: Screens = Screens.Home
+import com.cc221023.arcanemind.TarotCard
 
+data class MainViewState (
+    val selectedScreen: Screens = Screens.Home,
+val tarotCard: TarotCard = TarotCard( "","","",0,"","",""
+
+)
 )

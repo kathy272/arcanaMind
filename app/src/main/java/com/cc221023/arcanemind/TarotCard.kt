@@ -1,15 +1,22 @@
 package com.cc221023.arcanemind
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
-@Entity (tableName = "tarot_cards")
+//for the database
+@Entity(tableName = "tarot_cards")
 data class TarotCard(
-    val image: String,
+    val nameShort: String,
     val name: String,
-    val date: String,
-    val description: String,
-    val comment: String,
-    @PrimaryKey(autoGenerate = true) val id: Int = 0
+    val value: String,
+    @PrimaryKey(autoGenerate = false)
+    val id: Int, // Change the type to Int
+    val meaningUp: String,
+    val meaningRev: String,
+    val desc: String
 )
+
+
+
+

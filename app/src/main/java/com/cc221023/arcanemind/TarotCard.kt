@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 //for the database
 @Entity(tableName = "tarot_cards")
 data class TarotCard(
+    val type: String,
     val nameShort: String,
     val name: String,
     val value: String,

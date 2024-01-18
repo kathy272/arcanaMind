@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 
 class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
-    private val _tarotCardState = MutableStateFlow(TarotCard("", "", "", 0, "", "", ""))
+    private val _tarotCardState = MutableStateFlow(TarotCard("","", "", "", 0, "", "", ""))
     val tarotCardState: StateFlow<TarotCard> = _tarotCardState.asStateFlow()
     private val tarotCardRepository = TarotCardRepository(context)
 
@@ -36,6 +36,8 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             viewModelScope.launch {
                 _tarotCardState.value = randomCard
                 Log.d("APItest", "Selected Card: $randomCard")
+
+
             }
         }
     }

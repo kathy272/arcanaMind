@@ -29,6 +29,7 @@ class TarotCardRepository(private val context: Context) {
     //takes a single json object and returns a single TarotCard object
     private fun pluckJsonCard(jsonObject: JSONObject): TarotCard? {
         return TarotCard(
+            jsonObject.getString("type"),
             jsonObject.getString("name_short"),
             jsonObject.getString("name"),
             jsonObject.getString("value"),

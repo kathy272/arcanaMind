@@ -37,6 +37,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -54,6 +55,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -63,11 +65,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.ui.theme.Black
@@ -215,6 +222,33 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
         }
     }
 }
+
+//@OptIn(ExperimentalCoilApi::class)
+//@Composable
+//fun LoadImageFromUrl(imageUrl: String) {
+//    // Use Coil library to load and display the image from the URL
+//    val painter = rememberImagePainter(
+//        data = imageUrl,
+//        builder = {
+//            // You can customize image loading options here
+//            transformations(CircleCropTransformation())
+//        }
+//    )
+//
+//    // Display the image
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.Gray)
+//    ) {
+//        Image(
+//            painter = painter,
+//            contentDescription = null, // Provide content description if needed
+//            modifier = Modifier.fillMaxSize(),
+//            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+//        )
+//    }
+//}
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
@@ -598,9 +632,13 @@ fun DisplayDailyResultScreen(
         // Display the randomly drawn card
         randomCardState?.let { randomCard ->
             //Log.d("APItest", "Random Card is not null: $randomCard")
-
+            AsyncImage(
+                model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
+                contentDescription = "random card",
+            )
+            //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
             Text(
-                text = " ${randomCard.name}",
+                text = " ${randomCard.name} ",
                 color = White,
                 fontSize = 24.sp,
                 fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
@@ -670,10 +708,13 @@ fun DisplayDailyResultScreen(
                     onClick = {
                               mainViewModel.saveRandomCard(RandomDaily(
                                   name = randomCardState?.name ?: "",
-                                  id = randomCardState?.id ?: 0,
+                                  id = 0,
                                   meaningUp = randomCardState?.meaningUp ?: "",
                                   desc = randomCardState?.desc ?: "",
-                                  comment = comment.text
+                                  comment = comment.text,
+                                  name_short = randomCardState?.nameShort ?: "",
+                                    value_int = randomCardState?.value?.toInt() ?: 0,
+                                  imgUrl ="https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg"
                               )) // Save the card to the database
                         navController.navigate(Screens.Home.route)
                     },

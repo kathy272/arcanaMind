@@ -69,6 +69,10 @@ dependencies {
    // implementation("androidx.room:room-common:2.6.1")
    // implementation("androidx.room:room-ktx:2.6.1")
     //implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
+    //to load images
+    implementation ("com.squareup.picasso:picasso:2.71828")
+    //to save images
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
     implementation("androidx.compose.material:material:1.4.2")
     implementation("androidx.appcompat:appcompat:1.4.1")

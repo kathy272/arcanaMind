@@ -491,7 +491,8 @@ fun DrawDailyScreen(
 
             ) {
                 Button(
-                    onClick = {                mainViewModel.fetchRandomTarotCard()
+                    onClick = {
+                        mainViewModel.fetchRandomTarotCard()
                         navController.navigate(Screens.DrawDailyResult.route)
                     },
                     shape = RoundedCornerShape(20.dp),

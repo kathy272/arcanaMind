@@ -718,17 +718,18 @@ fun DisplayDailyResultScreen(
                     Button(
                         onClick = {
                             Log.d("DisplayDaily","In onClick BEFORE saved: ${randomCardState?.name}")
-                            mainViewModel.saveRandomCard(
-                                RandomDaily(
-                                    name = randomCardState?.name ?: "",
-                                    id = randomCardState?.id ?: 0,
-                                    meaningUp = randomCardState?.meaningUp ?: "",
-                                    desc = randomCardState?.desc ?: "",
-                                    comment = comment.text
-                                )
-                            )
-                            Log.d("DisplayDaily","In onClick AFTER saved: ${randomCardState?.name}")
+                            mainViewModel.saveRandomCard(RandomDaily(
+                                name = randomCardState?.name ?: "",
+                                id = 0,
+                                meaningUp = randomCardState?.meaningUp ?: "",
+                                desc = randomCardState?.desc ?: "",
+                                comment = comment.text,
+                                name_short = randomCardState?.nameShort ?: "",
+                                value_int = randomCardState?.value?.toInt() ?: 0,
+                                imgUrl ="https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg"
+                            )) // Save the card to the database
                             navController.navigate(Screens.Home.route)
+                            Log.d("DisplayDaily","In onClick AFTER saved: ${randomCardState?.name}")
                         },
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier

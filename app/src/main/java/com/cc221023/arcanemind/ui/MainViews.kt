@@ -582,7 +582,7 @@ fun DisplayDailyResultScreen(
             .padding(top = 100.dp, start = 25.dp, end = 25.dp)
             .background(color = Black, RoundedCornerShape(20.dp))
             .size(60.dp, 300.dp)
-            .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+            .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
 
             .verticalScroll(state = scrollState),
 
@@ -634,7 +634,7 @@ fun DisplayDailyResultScreen(
                     .padding(top = 0.dp, start = 0.dp, end = 0.dp)
                     .background(color = Black, RoundedCornerShape(20.dp))
 
-                    .border(1.dp, DarkGrey, RoundedCornerShape(20.dp))
+                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
 
                     .verticalScroll(state = scrollState),
 

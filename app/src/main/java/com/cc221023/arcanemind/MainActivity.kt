@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 import com.cc221023.arcanemind.data.TarotDatabase
 import com.cc221023.arcanemind.ui.MainView
@@ -21,6 +23,13 @@ import com.cc221023.arcanemind.ui.theme.ArcaneMindTheme
 class MainActivity : ComponentActivity() {
     private val db by lazy {
       Room.databaseBuilder(this, TarotDatabase::class.java, "TarotDatabase.db")
+          .addMigrations( object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Perform the necessary database schema changes
+            // For example, adding a new column or modifying an existing one
+            database.execSQL("ALTER TABLE tarot_cards ADD COLUMN new_column TEXT")
+        }
+    })
           .build()
     }
     private val mainViewModel by viewModels<MainViewModel>(

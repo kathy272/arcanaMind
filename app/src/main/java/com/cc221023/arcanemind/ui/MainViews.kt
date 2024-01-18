@@ -39,6 +39,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -56,6 +57,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -65,11 +67,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
 import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.ui.theme.Black
@@ -228,6 +235,33 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     }
 }
 
+//@OptIn(ExperimentalCoilApi::class)
+//@Composable
+//fun LoadImageFromUrl(imageUrl: String) {
+//    // Use Coil library to load and display the image from the URL
+//    val painter = rememberImagePainter(
+//        data = imageUrl,
+//        builder = {
+//            // You can customize image loading options here
+//            transformations(CircleCropTransformation())
+//        }
+//    )
+//
+//    // Display the image
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.Gray)
+//    ) {
+//        Image(
+//            painter = painter,
+//            contentDescription = null, // Provide content description if needed
+//            modifier = Modifier.fillMaxSize(),
+//            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+//        )
+//    }
+//}
+
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
@@ -344,12 +378,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             "Draw a daily card to read your fortune!",
                             fontSize = 12.sp,
                             letterSpacing = 0.15.em,
-                            fontFamily = FontFamily(
-                                Font(
-                                    R.font.artifika_regular,
-                                    FontWeight.Light
-                                )
-                            ),
+                            fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                             color = EggShelly,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -407,7 +436,6 @@ fun DrawDailyScreen(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Black),
-
     ) {
         Image(
             painter = painterResource(id = R.drawable.alchemy),
@@ -605,6 +633,11 @@ fun DisplayDailyResultScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     randomCardState?.let { randomCard ->
+                        AsyncImage(
+                            model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
+                            contentDescription = "random card",
+                        )
+                        //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
                         Text(
                             text = " ${randomCard.name}",
                             color = White,
@@ -637,8 +670,6 @@ fun DisplayDailyResultScreen(
                 }
             Spacer(modifier = Modifier.height(20.dp))
         }
-
-        // Your other scrollable content goes here
 
         item {
             Box(

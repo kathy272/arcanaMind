@@ -11,4 +11,7 @@ data class RandomDaily (
     val meaningUp: String = "",
     val desc: String = "",
     val comment: String = "",
+    val name_short: String = "",
+    val value_int: Int = 0,
+    val imgUrl: String = ""
 )

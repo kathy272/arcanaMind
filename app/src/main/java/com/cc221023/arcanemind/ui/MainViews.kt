@@ -2,6 +2,7 @@ package com.cc221023.arcanemind.ui
 
 import android.content.Context
 import android.util.Log
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,8 +51,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -144,34 +148,21 @@ fun MainView(mainViewModel: MainViewModel) {
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screens) {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-        /*
-            .drawWithContent {
-               val linearGradient = Brush.verticalGradient(
-                    startY = 0f,
-                    endY = 30f,
-                    colors = listOf(
-                        Gray.copy(alpha = 0f),
-                        Gray.copy(alpha = 0.2f),
-                        Gray.copy(alpha = 0.5f),
-                        Gray.copy(alpha = 0.9f)
-                    )
-               )
-              drawRect(
-                  brush = linearGradient,
-                  topLeft = Offset(0f, 0f), // Adjust the offset as needed
-                  size = Size(size.width, 10f)
-                )
-        }
-        */
+
+            .background(color = Color.Transparent)
+
     ) {
         BottomNavigation(
             backgroundColor = Black,
             contentColor = Black,
             modifier = Modifier
-                .shadow(50.dp),
+                .zIndex(2f)
+
+            ,
         ) {
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
@@ -182,7 +173,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 selected = (selectedScreen == Screens.Info),
                 onClick = { navController.navigate(Screens.Info.route) },
                 modifier = Modifier
-                    .shadow(50.dp)
+                    .shadow(50.dp)    .zIndex(1f)
                     .padding(10.dp),
                 icon = {
                     Icon(
@@ -236,8 +227,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 }
             )
         }
-    }
-}
+    }}
+
 
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
@@ -261,6 +252,8 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+
+
                 .padding(start = 25.dp, end = 25.dp, top = 20.dp, bottom = 25.dp)
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
@@ -290,6 +283,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .size(700.dp, 900.dp)
+
                     .absoluteOffset(0.dp, (-135).dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
@@ -306,8 +300,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         containerColor = Color.Transparent,
                         contentColor = Black
                     )
-                )
-                {
+                ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -368,39 +361,35 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         )
                     }
                 }
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 25.dp, bottom = 25.dp, start = 25.dp, end = 25.dp)
-                        .size(180.dp, 140.dp)
-                        .background(
-                            color = Black, RoundedCornerShape(20.dp)
-                        )
-                        .absoluteOffset(0.dp, (500).dp),
-                ) {
-                    Box(
+            }}
+                    Column(
                         modifier = Modifier
+                            .padding(top=580.dp, start = 45.dp, end = 45.dp)
+                            .clip(RoundedCornerShape(20.dp))
+
                             .fillMaxWidth()
-                            .padding(top = 0.dp, bottom = 0.dp, start = 0.dp, end = 0.dp)
-                            .size(180.dp, 145.dp)
+                            .background(color = PitchBlack)
+
+                            .size(300.dp, 180.dp)
                             .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
-                            .zIndex(1f)
-                    ) {}
+                    ) {
                     Text(
                         "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
                                 "~ Benebell Wen",
                         textAlign = TextAlign.Center,
                         fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                         color = White,
-                        fontSize = 12.sp,
+                        fontSize = 16.sp,
                         lineHeight = 25.sp,
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .padding(top=10.dp)
+
+                            .fillMaxSize()
                             .padding(10.dp)
                     )
                 }
-            }
-        }
+
+
     }
 
 }

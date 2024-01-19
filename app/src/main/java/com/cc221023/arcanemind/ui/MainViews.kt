@@ -107,6 +107,7 @@ fun MainView(mainViewModel: MainViewModel) {
             }
             composable(Screens.Account.route) {
                 mainViewModel.selectScreen(Screens.Account)
+                mainViewModel.getAllDailyCards()
                 AccountScreen(mainViewModel, navController)
             }
 
@@ -606,9 +607,9 @@ fun DisplayDailyResultScreen(
                 randomCardState?.let { randomCard ->
                     Box(
 
-                        modifier =Modifier
+                        modifier = Modifier
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .size(500.dp,300.dp)
+                            .size(500.dp, 300.dp)
                             .padding(top = 20.dp, bottom = 0.dp, start = 95.dp, end = 95.dp)
                             .background(color = Color.White, RoundedCornerShape(20.dp))
 
@@ -989,6 +990,24 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
     val randomDailyState by mainViewModel.randomDailyState.collectAsState()
     val lazyColumnState = rememberLazyListState()
 
+    //to show only a short part of the text
+
+    val maxLength = 20
+    val truncateText: (String) -> String = { text ->
+        if (text.length > maxLength) {
+            text.substring(0, maxLength) + "..."
+        } else {
+            text
+        }
+    }
+    val maxLengthName = 14
+    val truncateName: (String) -> String = { text ->
+        if (text.length > maxLengthName) {
+            text.substring(0, maxLengthName) + "..."
+        } else {
+            text
+        }
+    }
 
     val savedDateMillis = randomDailyState.date
     val savedDate = Date(savedDateMillis)
@@ -1033,6 +1052,8 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                     .absoluteOffset(x = 0.dp, y = (-25).dp),
             )
             Spacer(modifier = Modifier.height(35.dp))
+
+
             Column(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
@@ -1116,79 +1137,122 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                         .scale(3f)
 
                 )
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(30.dp))
 
+                    //Row
                     LazyColumn(
+                        state = lazyColumnState,
+
                         horizontalAlignment = Alignment.Start,
                         verticalArrangement = Arrangement.Bottom,
+                        modifier = Modifier
+                            .fillMaxSize()
+
+                            //.background(color = Black)
 
                     ) {Log.d("allcardsRandom", "${state.value.daily_cards}")
                         items(state.value.daily_cards) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
 
-                        Row(
-                            verticalAlignment = Alignment.Bottom,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 10.dp)
-                                .background(color = Color(0xFF161616))
-                        ) {
-                            Text(
-                                text = it.name,
-                                fontSize = 22.sp,
-                                color = White,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        R.font.almendra_regular,
-                                        FontWeight.Light
-                                    )
-                                ),
-                                textAlign = TextAlign.Start
-                            )
-                            Spacer(modifier = Modifier.width(20.dp))
-                            Text(
-                                text = formattedDate,
-                                fontSize = 14.sp,
-                                color = White,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        R.font.asap_regular,
-                                        FontWeight.Light
-                                    )
-                                ),
-                                textAlign = TextAlign.Start,
-                                modifier = Modifier.absoluteOffset(0.dp, (-3).dp)
-                            )
-                        }
-                            Text(
-                                text = it.comment,
-                                fontSize = 16.sp,
-                                color = White,
-                                textAlign = TextAlign.Start,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        R.font.asap_regular,
-                                        FontWeight.Light
-                                    )
-                                ),
-                            )
+                                modifier = Modifier
 
-                    IconButton(
-                        onClick = {
-                            // delete element
+                                    .padding(top = 15.dp,)
+                                    .size(700.dp, 80.dp)
+                                    .background(color = Black)
+                                    .clip(shape = RoundedCornerShape(20.dp))
+                                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.Bottom,
+                                    modifier = Modifier
+
+                                        .padding(top = 15.dp,)
+
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.Bottom,
+                                        modifier = Modifier
+                                           // .size(400.dp, 20.dp)
+                                            .padding(start = 15.dp)
+
+                                    ) {
+                                        Text(
+                                            text = truncateName(it.name),
+                                            fontSize = 22.sp,
+                                            color = White,
+                                            fontFamily = FontFamily(
+                                                Font(
+                                                    R.font.almendra_regular,
+                                                    FontWeight.Light
+                                                )
+                                            ),
+                                            textAlign = TextAlign.Start,
+                                            modifier = Modifier.width(160.dp)
+
+                                        )
+                                        Spacer(modifier = Modifier.width(20.dp))
+                                        Text(
+                                            text = formattedDate,
+                                            fontSize = 14.sp,
+                                            color = White,
+                                            fontFamily = FontFamily(
+                                                Font(
+                                                    R.font.asap_regular,
+                                                    FontWeight.Light
+                                                )
+                                            ),
+                                            textAlign = TextAlign.Start,
+                                            modifier = Modifier
+                                                .padding(start = 0.dp, top = 5.dp, bottom = 5.dp)
+
+
+                                        )
+
+
+                                    }
+                                    Text(
+                                        text = truncateText(it.comment),
+
+                                        fontSize = 16.sp,
+                                        color = White,
+                                        textAlign = TextAlign.Start,
+                                        fontFamily = FontFamily(
+                                            Font(
+                                                R.font.asap_regular,
+                                                FontWeight.Light
+                                            )
+                                        ),
+                                        modifier = Modifier
+                                            .padding(start = 15.dp, top = 5.dp)
+
+                                    )
+
+                                }
+                                Spacer(modifier = Modifier.width(20.dp))
+                                IconButton(
+                                    onClick = {
+                                        // delete element
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.deletebin),
+                                        contentDescription = "delete button",
+                                        modifier = Modifier
+                                            .size(70.dp, 70.dp)
+                                            .zIndex(1f)
+                                            .padding(top = 15.dp, bottom = 15.dp )
+,
+                                        tint = White,
+
+                                    )
+                                }
+                            }
                         }
-                    ) {
-                        Icon(
-                            imageVector= ImageVector.vectorResource(id = R.drawable.deletebin),
-                            contentDescription = "delete button",
-                            modifier = Modifier
-                                .size(40.dp, 40.dp)
-                                .padding()
-                                .absoluteOffset(0.dp, 2.dp),
-                            tint = White
-                        )
-                    }
-                }
-            }}
+
+                        }
+            }
         }}
     }
 

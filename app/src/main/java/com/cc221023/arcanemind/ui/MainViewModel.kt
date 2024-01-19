@@ -68,6 +68,9 @@ dao.getAllDailyCards().collect() { allRandomCards ->
             }
         }
     }
+
+
+
 fun updateDailyRandomCard(dailyCard: RandomDaily){
     viewModelScope.launch {
         dao.update(dailyCard)

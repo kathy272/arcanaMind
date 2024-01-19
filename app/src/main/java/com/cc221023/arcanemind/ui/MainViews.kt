@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,7 +71,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.cc221023.arcanemind.R
 import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
@@ -647,9 +649,11 @@ fun DisplayDailyResultScreen(
                         )
                         Box(
                             modifier = Modifier
-                                .background(brush = Brush.verticalGradient(
-                                    colors = listOf(Black, PitchBlack)
-                                ), RoundedCornerShape(20.dp))
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Black, PitchBlack)
+                                    ), RoundedCornerShape(20.dp)
+                                )
                                 .border(1.dp, DarkGray, RoundedCornerShape(20.dp)),
                         ) {
                             Text(
@@ -670,9 +674,11 @@ fun DisplayDailyResultScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp)
-                    .background(brush = Brush.verticalGradient(
-                        colors = listOf(Black, PitchBlack)
-                    ), RoundedCornerShape(20.dp))
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Black, PitchBlack)
+                        ), RoundedCornerShape(20.dp)
+                    )
                     .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                     .padding(start = 5.dp, top = 10.dp, end = 5.dp, bottom = 10.dp)
             ){
@@ -1200,7 +1206,7 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF161616))
+            .background(color = Black)
     ) {
         Image(
             painter = painterResource(id = R.drawable.alchemy),
@@ -1219,13 +1225,13 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
             Text(
-                buildAnnotatedString { append("Hello, stranger!\n") },
+                buildAnnotatedString { append("The major arcana!\n") },
                 fontSize = 24.sp,
                 color = White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
             )
             Text(
-                buildAnnotatedString { append("Have an arcane day!") },
+                buildAnnotatedString { append("The most powerful cards") },
                 fontSize = 20.sp,
                 color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
@@ -1233,35 +1239,56 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                     .absoluteOffset(x = 0.dp, y = (-25).dp),
             )
 
-            LazyColumn(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2), // Set the number of items in each row (change as needed)
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                    .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
                     .absoluteOffset(x = 0.dp, y = 20.dp),
             ) {
                 items(majorArcanaCards) { card ->
-                    // Display image
-                    Image(
-                        painter = rememberImagePainter(
-                            data = "https://sacred-texts.com/tarot/pkt/img/${card.nameShort}.jpg"
-                        ),
-                        contentDescription = "Tarot Card",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp) // Adjust the height as needed
-                    )
-
-                    // Display card name
-                    Text(
-                        text = card.name,
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth()
-                    )
+                   Button(
+                       onClick = { /*TODO - make navigation to single card view*/ },
+                       modifier = Modifier
+                           .fillMaxSize()
+                           .padding(0.dp),
+                       colors = ButtonDefaults.buttonColors(
+                           containerColor = Color.Transparent
+                       )
+                   ) {
+                       Column(
+                           modifier = Modifier
+                               .fillMaxSize()
+                               .padding(0.dp)
+                       ) {
+                           // Display image
+                           Image(
+                               painter = rememberAsyncImagePainter(
+                                   model = "https://sacred-texts.com/tarot/pkt/img/${card.nameShort}.jpg"
+                               ),
+                               contentDescription = "Tarot Card",
+                               modifier = Modifier
+                                   .fillMaxWidth()
+                                   .height(225.dp) // Adjust the height as needed
+                           )
+                           // Display card name
+                           Text(
+                               text = card.name,
+                               color = Color.White,
+                               fontSize = 16.sp,
+                               fontFamily = FontFamily(
+                                   Font(
+                                       R.font.artifika_regular,
+                                       FontWeight.Light
+                                   )
+                               ),
+                               textAlign = TextAlign.Center,
+                               modifier = Modifier
+                                   .padding(bottom = 8.dp)
+                                   .fillMaxWidth()
+                           )
+                       }
+                   }
                 }
             }
         }

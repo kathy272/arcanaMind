@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "daily_cards")
-data class RandomDaily (
+data class RandomDaily(
     val name: String = "",
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -12,5 +12,6 @@ data class RandomDaily (
     val desc: String = "",
     val comment: String = "",
     val name_short: String = "",
-    val imgUrl: String = ""
+    val imgUrl: String = "",
+    val date: Long = 0,
 )

@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TarotDao {
     @Insert
-    suspend fun insert(tarot_card: RandomDaily?)
+   suspend fun insert(dailyCard: RandomDaily)
 
     @Update
-    fun update(tarot_card: RandomDaily?)
+    fun update(dailyCard: RandomDaily)
 
     @Delete
-    fun delete(tarot_card: RandomDaily?)
+    fun delete(dailyCard: RandomDaily)
 
     @Query("DELETE FROM tarot_cards")
     fun deleteAllCards()
@@ -31,8 +31,8 @@ interface TarotDao {
     @Query("SELECT * FROM tarot_cards WHERE id = :id")
     fun getTarotCard(id: Int): LiveData<TarotCard>
 
-    @Query("SELECT * FROM daily_cards ORDER BY id")
-    fun getAllRandomCards(): LiveData<List<RandomDaily>>
+    @Query("SELECT * FROM daily_cards")
+    fun getAllDailyCards(): Flow<List<RandomDaily>>
 
     @Query("SELECT * FROM daily_cards WHERE id = :id")
     fun getDailyCard(id: Int): LiveData<RandomDaily>}
@@ -41,6 +41,7 @@ interface TarotDao {
 //@Dao
 //interface TarotDao {
 //    @Insert
+// fun getAllRandomCards(): LiveData<List<RandomDaily>>
 //    fun insert(tarot_card: TarotCard?)
 //
 //    @Update

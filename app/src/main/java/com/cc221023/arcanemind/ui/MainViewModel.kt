@@ -10,11 +10,13 @@ import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.TarotCardRepository
 import com.cc221023.arcanemind.data.TarotDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
@@ -26,6 +28,9 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     val mainViewState: StateFlow<MainViewState> = _mainViewState.asStateFlow()
     private var tarotCards: List<TarotCard> = emptyList()
 
+
+    private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",0))
+    val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
     init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()
     }
@@ -36,18 +41,39 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             viewModelScope.launch {
                 _tarotCardState.value = randomCard
                 Log.d("APItest", "Selected Card: $randomCard")
-Log.d("APItest", "Selected Card: $_tarotCardState.value")
 
             }
         }
     }
 
-    fun saveRandomCard(tarotCard: RandomDaily) {
+    fun saveRandomCard(dailyCard: RandomDaily) {
         viewModelScope.launch {
-            dao.insert(tarotCard)
-            Log.d("APItest", "Saved Card: $tarotCard")
+            withContext(Dispatchers.IO) {
+                dao.insert(dailyCard)
+            }
+            Log.d("APItest", "Saved Card: $dailyCard")
+
+//check if its actually saved
+dao.getAllDailyCards().collect() { allRandomCards ->
+                Log.d("APItest", "All Random Cards: $allRandomCards")
+            }
         }
     }
+
+    fun getAllDailyCards( ) {
+        viewModelScope.launch {
+            dao.getAllDailyCards().collect() { allRandomCards ->
+                _mainViewState.update { it.copy(daily_cards = allRandomCards) }
+                Log.d("AllCardsRandom", "All Cards: $allRandomCards")
+            }
+        }
+    }
+fun updateDailyRandomCard(dailyCard: RandomDaily){
+    viewModelScope.launch {
+        dao.update(dailyCard)
+    }
+getAllDailyCards()
+}
     //Navigation
     fun selectScreen(screen: Screens){
         _mainViewState.update { it.copy(selectedScreen = screen) }

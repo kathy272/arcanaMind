@@ -235,33 +235,6 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     }
 }
 
-//@OptIn(ExperimentalCoilApi::class)
-//@Composable
-//fun LoadImageFromUrl(imageUrl: String) {
-//    // Use Coil library to load and display the image from the URL
-//    val painter = rememberImagePainter(
-//        data = imageUrl,
-//        builder = {
-//            // You can customize image loading options here
-//            transformations(CircleCropTransformation())
-//        }
-//    )
-//
-//    // Display the image
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.Gray)
-//    ) {
-//        Image(
-//            painter = painter,
-//            contentDescription = null, // Provide content description if needed
-//            modifier = Modifier.fillMaxSize(),
-//            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-//        )
-//    }
-//}
-
 @Composable
 fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
@@ -629,45 +602,65 @@ fun DisplayDailyResultScreen(
     ) {
         // Display the randomly drawn card
         item {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    randomCardState?.let { randomCard ->
-                        AsyncImage(
-                            model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
-                            contentDescription = "random card",
-                        )
-                        //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
-                        Text(
-                            text = " ${randomCard.name}",
-                            color = White,
-                            fontSize = 24.sp,
-                            fontFamily = FontFamily(
-                                Font(
-                                    R.font.artifika_regular,
-                                    FontWeight.Light
-                                )
-                            ),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(10.dp)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .background(brush = Brush.verticalGradient(
-                                    colors = listOf(Black, PitchBlack)
-                                ), RoundedCornerShape(20.dp))
-                                .border(1.dp, DarkGray, RoundedCornerShape(20.dp)),
-                        ) {
-                            Text(
-                                text = " ${randomCard.meaningUp}",
-                                color = White,
-                                fontSize = 16.sp,
-                                textAlign = TextAlign.Start,
-                                modifier = Modifier.padding(20.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                randomCardState?.let { randomCard ->
+                    Box(
+
+                        modifier =Modifier
+                            .clip(shape = RoundedCornerShape(10.dp))
+                            .size(500.dp,300.dp)
+                            .padding(top = 20.dp, bottom = 0.dp, start = 95.dp, end = 95.dp)
+                            .background(color = Color.White, RoundedCornerShape(20.dp))
+
+                    ){
+                    AsyncImage(
+                        model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
+                        contentDescription = "${randomCardState?.desc}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+
+                            .clip(shape = RoundedCornerShape(10.dp))
+                            .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
+                            .zIndex(1f)
+                    )}
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                    //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
+                    Text(
+                        text = " ${randomCard.name}",
+                        color = White,
+                        fontSize = 24.sp,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.artifika_regular,
+                                FontWeight.Light
                             )
-                        }
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(10.dp)
+                    )
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(Black, PitchBlack)
+                                ), RoundedCornerShape(20.dp)
+                            )
+                            .border(1.dp, DarkGray, RoundedCornerShape(20.dp)),
+                    ) {
+                        Text(
+                            text = " ${randomCard.meaningUp}",
+                            color = White,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier.padding(20.dp)
+                        )
                     }
-                }
+                }}
+            }
             Spacer(modifier = Modifier.height(20.dp))
         }
 
@@ -676,46 +669,58 @@ fun DisplayDailyResultScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp)
-                    .background(brush = Brush.verticalGradient(
-                        colors = listOf(Black, PitchBlack)
-                    ), RoundedCornerShape(20.dp))
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(Black, PitchBlack)
+                        ), RoundedCornerShape(20.dp)
+                    )
                     .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
 
                     .verticalScroll(state = scrollState),
 
-                ){
-                Text(text = "Your thoughts:" , color = White, fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)), textAlign = TextAlign.Center, modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 10.dp, bottom = 10.dp))
-            TextField(
-                value = comment,
-//                onValueChange = { newText -> content = newText },
-                onValueChange = { newText -> comment = newText },
-                label = { Text(text = "Add your interpretation...") },
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(25.dp))
-                    .fillMaxWidth()
-                    .padding(20.dp, top = 0.dp, end = 20.dp, bottom = 20.dp)
-                    .size(60.dp, 120.dp)
-                    ,
-                colors = TextFieldDefaults.textFieldColors(containerColor = White)
-            )}
+                ) {
+                Text(
+                    text = "Your thoughts:",
+                    color = White,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 10.dp, start = 20.dp, end = 10.dp, bottom = 10.dp)
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                TextField(
+                    value = comment,
+                    onValueChange = { newText -> comment = newText },
+                    label = { Text(text = "Add your interpretation...") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(10.dp)
+                        .absoluteOffset(0.dp, 34.dp)
+                        .clip(shape = RoundedCornerShape(25.dp)),
+                    colors = TextFieldDefaults.textFieldColors(containerColor = White)
+                )
+            }
             Box(
                 modifier = Modifier
-                    .padding(top= 25.dp, start = 5.dp, end = 5.dp)
+                    .padding(top = 25.dp, start = 5.dp, end = 5.dp)
 
 
             ) {
                 Button(
                     onClick = {
-                              mainViewModel.saveRandomCard(RandomDaily(
-                                  name = randomCardState.name ?: "",
-                                  id = 0,
-                                  meaningUp = randomCardState.meaningUp ?: "",
-                                  desc = randomCardState.desc ?: "",
-                                  comment = comment.text,
-                                  name_short = randomCardState.nameShort ?: "",
+                        mainViewModel.saveRandomCard(
+                            RandomDaily(
+                                name = randomCardState.name ?: "",
+                                id = 0,
+                                meaningUp = randomCardState.meaningUp ?: "",
+                                desc = randomCardState.desc ?: "",
+                                comment = comment.text,
+                                name_short = randomCardState.nameShort ?: "",
 
-                                  imgUrl ="https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg"
-                              )) // Save the card to the database
+                                imgUrl = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg"
+                            )
+                        ) // Save the card to the database
                         navController.navigate(Screens.Home.route)
                     },
                     shape = RoundedCornerShape(20.dp),
@@ -741,7 +746,9 @@ fun DisplayDailyResultScreen(
                     )
                 }
             }
-        }}
+        }
+    }
+}
 
 
 @Composable

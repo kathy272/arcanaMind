@@ -66,6 +66,8 @@ Log.d("APItest", "Selected Card: $_tarotCardState.value")
     fun navigateToMajorArcanaScreen(navController: NavController){
         navController.navigate((Screens.MajorArcana.route))
     }
+
+
 }
 
 

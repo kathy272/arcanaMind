@@ -68,9 +68,26 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             dao.getAllDailyCards().collect() { allRandomCards ->
                 _mainViewState.update { it.copy(daily_cards = allRandomCards) }
                 Log.d("AllCardsRandom", "All Cards: $allRandomCards")
+                Log.d("Delete","got all cards")
             }
         }
     }
+
+    fun deleteButton(dailyCard: RandomDaily){
+        viewModelScope.launch {
+            dao.delete(dailyCard)
+            Log.d("Delete","Clicked on delete, dailyCard: ${dailyCard}")
+        }
+        getAllDailyCards()
+        Log.d("Delete","get all cards")
+    }
+
+    /*fun deleteButton(plant: NewPlant){
+        viewModelScope.launch {
+            dao.deletePlant(plant)
+        }
+        getPlants()
+    }*/
 
     fun updateDailyRandomCard(dailyCard: RandomDaily){
         viewModelScope.launch {

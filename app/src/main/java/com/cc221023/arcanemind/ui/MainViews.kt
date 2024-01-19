@@ -44,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,8 +56,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -976,6 +979,8 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 @Composable
 fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController) {
     val lazyColumnState = rememberLazyListState()
+    var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     //to show only a short part of the text
 
@@ -1121,119 +1126,192 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
-                /*TODO - If statment check if isEmpty()*/
-                LazyColumn(
-                    state = lazyColumnState,
+                if(state.value.daily_cards.isEmpty()) {
+                   Column(
+                       modifier = Modifier
+                           .fillMaxSize(),
+                       horizontalAlignment = Alignment.CenterHorizontally,
+                   ) {
+                       Text(
+                           text = "Seems like you haven't drawn a card yet...",
+                           fontWeight = FontWeight.Bold,
+                           fontSize = 16.sp,
+                           style = TextStyle(
+                               color = White,
+                               fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
+                           ),
+                           modifier = Modifier
+                               .padding(16.dp),
+                           textAlign = TextAlign.Center
+                       )
 
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Bottom,
-                    modifier = Modifier
-                        .fillMaxSize()
+                   }
+                }else {
+                    LazyColumn(
+                        state = lazyColumnState,
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Bottom,
+                        modifier = Modifier
+                            .fillMaxSize()
 
-                ) {
-                    Log.d("allcardsRandom", "${state.value.daily_cards}")
-                    items(state.value.daily_cards.reversed()) {
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .padding(top = 15.dp)
-                                .size(700.dp, 80.dp)
-                                .background(
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(Black, PitchBlack)
-                                    )
-                                )
-                                .clip(shape = RoundedCornerShape(20.dp))
-                                .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start,
-                                verticalArrangement = Arrangement.Bottom,
+                    ) {
+                        Log.d("allcardsRandom", "${state.value.daily_cards}")
+                        items(state.value.daily_cards.reversed()) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier
-
                                     .padding(top = 15.dp)
-
+                                    .clip(shape = RoundedCornerShape(20.dp))
+                                    .size(700.dp, 80.dp)
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(Black, PitchBlack)
+                                        )
+                                    )
+                                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.Bottom,
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.Bottom,
                                     modifier = Modifier
-                                        // .size(400.dp, 20.dp)
-                                        .padding(start = 15.dp)
+
+                                        .padding(top = 15.dp)
 
                                 ) {
-                                    Text(
-                                        text = truncateName(it.name),
-                                        fontSize = 22.sp,
-                                        color = White,
-                                        fontFamily = FontFamily(
-                                            Font(
-                                                R.font.almendra_regular,
-                                                FontWeight.Light
-                                            )
-                                        ),
-                                        textAlign = TextAlign.Start,
-                                        modifier = Modifier.width(160.dp)
+                                    Row(
+                                        verticalAlignment = Alignment.Bottom,
+                                        modifier = Modifier
+                                            // .size(400.dp, 20.dp)
+                                            .padding(start = 15.dp)
 
-                                    )
-                                    Spacer(modifier = Modifier.width(20.dp))
+                                    ) {
+                                        Text(
+                                            text = truncateName(it.name),
+                                            fontSize = 22.sp,
+                                            color = White,
+                                            fontFamily = FontFamily(
+                                                Font(
+                                                    R.font.almendra_regular,
+                                                    FontWeight.Light
+                                                )
+                                            ),
+                                            textAlign = TextAlign.Start,
+                                            modifier = Modifier.width(160.dp)
+
+                                        )
+                                        Spacer(modifier = Modifier.width(20.dp))
+                                        Text(
+                                            text = it.date,
+                                            fontSize = 14.sp,
+                                            color = White,
+                                            fontFamily = FontFamily(
+                                                Font(
+                                                    R.font.asap_regular,
+                                                    FontWeight.Light
+                                                )
+                                            ),
+                                            textAlign = TextAlign.Start,
+                                            modifier = Modifier
+                                                .padding(start = 0.dp, top = 5.dp, bottom = 5.dp)
+
+
+                                        )
+
+
+                                    }
                                     Text(
-                                        text = it.date,
-                                        fontSize = 14.sp,
+                                        text = truncateText(it.comment),
+
+                                        fontSize = 16.sp,
                                         color = White,
+                                        textAlign = TextAlign.Start,
                                         fontFamily = FontFamily(
                                             Font(
                                                 R.font.asap_regular,
                                                 FontWeight.Light
                                             )
                                         ),
-                                        textAlign = TextAlign.Start,
                                         modifier = Modifier
-                                            .padding(start = 0.dp, top = 5.dp, bottom = 5.dp)
-
-
-                                    )
-
-
-                                }
-                                Text(
-                                    text = truncateText(it.comment),
-
-                                    fontSize = 16.sp,
-                                    color = White,
-                                    textAlign = TextAlign.Start,
-                                    fontFamily = FontFamily(
-                                        Font(
-                                            R.font.asap_regular,
-                                            FontWeight.Light
-                                        )
-                                    ),
-                                    modifier = Modifier
-                                        .padding(start = 15.dp, top = 5.dp)
-
-                                )
-
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                            IconButton(
-                                onClick = {
-                                    /*TODO - delete element
-                                    mainViewModel.deleteButton(plant) */
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.deletebin),
-                                    contentDescription = "delete button",
-                                    modifier = Modifier
-                                        .size(70.dp, 70.dp)
-                                        .zIndex(1f)
-                                        .padding(top = 15.dp, bottom = 15.dp),
-                                    tint = White,
+                                            .padding(start = 15.dp, top = 5.dp)
 
                                     )
+
+                                }
+                                Spacer(modifier = Modifier.width(20.dp))
+                                IconButton(
+                                    onClick = {
+                                        Log.d("Delete", "Clicked on delete, it: ${it}")
+                                        showDialog = true
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.deletebin),
+                                        contentDescription = "delete button",
+                                        modifier = Modifier
+                                            .size(70.dp, 70.dp)
+                                            .zIndex(1f)
+                                            .padding(top = 15.dp, bottom = 15.dp),
+                                        tint = White,
+                                    )
+                                }
+                                if (showDialog) {
+                                    AlertDialog(
+                                        backgroundColor = Black,
+                                        contentColor = White,
+                                        onDismissRequest = {
+                                            // Handle dismiss if needed
+                                            showDialog = false
+                                        },
+                                        title = {
+                                            Text(
+                                                text = "Confirm Deletion",
+                                                color = EggShelly,
+                                                fontFamily = FontFamily(
+                                                    Font(R.font.almendra_bold, FontWeight.Light)
+                                                ),
+                                                fontSize = 24.sp,
+                                            )
+                                        },
+                                        text = {
+                                            Text(
+                                                text = "Are you sure you want to delete this daily draw?",
+                                                color = White
+                                            )
+                                        },
+                                        confirmButton = {
+                                            Button(
+                                                onClick = {
+                                                    mainViewModel.deleteButton(it)
+                                                    showDialog = false
+                                                },
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = EggShelly,
+                                                    contentColor = Black
+                                                ),
+                                                modifier = Modifier.padding(bottom = 20.dp)
+                                            ) {
+                                                Text("Confirm")
+                                            }
+                                        },
+                                        dismissButton = {
+                                            Button(
+                                                onClick = {
+                                                    showDialog = false
+                                                },
+                                                colors = ButtonDefaults.buttonColors(
+                                                    containerColor = EggShelly,
+                                                    contentColor = Black
+                                                ),
+                                                modifier = Modifier.padding(bottom = 20.dp)
+                                            ) {
+                                                Text("Cancel")
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
-
                 }
             }
         }

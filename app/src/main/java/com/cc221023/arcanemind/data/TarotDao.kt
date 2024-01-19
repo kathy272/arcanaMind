@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TarotDao {
     @Insert
-   suspend fun insert(dailyCard: RandomDaily)
+    suspend fun insert(dailyCard: RandomDaily)
 
     @Update
     fun update(dailyCard: RandomDaily)

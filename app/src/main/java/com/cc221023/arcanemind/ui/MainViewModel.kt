@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
+
     private val _tarotCardState = MutableStateFlow(TarotCard("","", "", "",  0, "", "", ""))
     val tarotCardState: StateFlow<TarotCard> = _tarotCardState.asStateFlow()
     private val tarotCardRepository = TarotCardRepository(context)
@@ -46,13 +46,17 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     }
 
     fun saveRandomCard(dailyCard: RandomDaily) {
+        Log.d("APItest", "Tries saving")
         viewModelScope.launch {
+            Log.d("APItest","launched before insert, dailyCard: ${dailyCard}")
             withContext(Dispatchers.IO) {
                 dao.insert(dailyCard)
+                Log.d("APItest","launched after insert, dailyCard: ${dailyCard}")
+
             }
             Log.d("APItest", "Saved Card: $dailyCard")
 
-//check if its actually saved
+            //check if its actually saved
             dao.getAllDailyCards().collect() { allRandomCards ->
                 Log.d("APItest", "All Random Cards: $allRandomCards")
             }
@@ -68,25 +72,23 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
         }
     }
 
-    //get major arcana cards
-    private val _majorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
-    val majorArcanaCards: StateFlow<List<TarotCard>> get() = _majorArcanaCards
-
-    init {
-        loadMajorArcanaCards()
-    }
-
-    private fun loadMajorArcanaCards() {
-        viewModelScope.launch {
-            _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
-        }
-    }
-
     fun updateDailyRandomCard(dailyCard: RandomDaily){
         viewModelScope.launch {
             dao.update(dailyCard)
         }
         getAllDailyCards()
+    }
+
+    //get major arcana cards
+    private val _majorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val majorArcanaCards: StateFlow<List<TarotCard>> get() = _majorArcanaCards
+    init {
+        loadMajorArcanaCards()
+    }
+    private fun loadMajorArcanaCards() {
+        viewModelScope.launch {
+            _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
+        }
     }
 
     //Navigation
@@ -108,5 +110,3 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
         navController.navigate((Screens.MajorArcana.route))
     }
 }
-
-

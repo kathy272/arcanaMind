@@ -1,7 +1,8 @@
 package com.cc221023.arcanemind.ui
 
-import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,7 +44,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,7 +55,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -76,17 +75,16 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.cc221023.arcanemind.R
 import com.cc221023.arcanemind.RandomDaily
-import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.ui.theme.Black
 import com.cc221023.arcanemind.ui.theme.DarkGray
 import com.cc221023.arcanemind.ui.theme.EggShelly
 import com.cc221023.arcanemind.ui.theme.MidGray
 import com.cc221023.arcanemind.ui.theme.PitchBlack
 import com.cc221023.arcanemind.ui.theme.White
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(mainViewModel: MainViewModel) {
@@ -147,25 +145,6 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     Box(
         modifier = Modifier
             .fillMaxWidth()
-        /*
-            .drawWithContent {
-               val linearGradient = Brush.verticalGradient(
-                    startY = 0f,
-                    endY = 30f,
-                    colors = listOf(
-                        Gray.copy(alpha = 0f),
-                        Gray.copy(alpha = 0.2f),
-                        Gray.copy(alpha = 0.5f),
-                        Gray.copy(alpha = 0.9f)
-                    )
-               )
-              drawRect(
-                  brush = linearGradient,
-                  topLeft = Offset(0f, 0f), // Adjust the offset as needed
-                  size = Size(size.width, 10f)
-                )
-        }
-        */
     ) {
         BottomNavigation(
             backgroundColor = Black,
@@ -546,21 +525,19 @@ fun DrawDailyScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayDailyResultScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
-    context: Context = LocalContext.current
 ) {
     var comment by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-
-    val randomCard = remember { mutableStateOf<TarotCard?>(null) }
     val scrollState = rememberScrollState()
     val randomCardState by mainViewModel.tarotCardState.collectAsState()
     val lazyColumnState = rememberLazyListState()
 
-    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, comment: ${randomCardState}")
+    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, randomCardState: ${randomCardState}")
 
     Box(
         modifier = Modifier
@@ -609,7 +586,7 @@ fun DisplayDailyResultScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 randomCardState?.let { randomCard ->
-                    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, random: ${randomCard}")
+                    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, randomCard: ${randomCard}")
                     Box(
 
                         modifier = Modifier
@@ -713,6 +690,9 @@ fun DisplayDailyResultScreen(
             ) {
                 Button(
                     onClick = {
+                        val currentDate = LocalDate.now() // Get the current date
+                        val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) // Save the date in the wished format
+
                         mainViewModel.saveRandomCard(
                             RandomDaily(
                                 name = randomCardState.name ?: "",
@@ -723,7 +703,7 @@ fun DisplayDailyResultScreen(
                                 name_short = randomCardState.nameShort ?: "",
 
                                 imgUrl = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
-                                date = System.currentTimeMillis(),
+                                date = formattedDate,
                             )
                         ) // Save the card to the database
                         navController.navigate(Screens.Home.route)
@@ -995,9 +975,6 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
 @Composable
 fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController) {
-    val scrollState = rememberScrollState()
-    val randomCard = remember { mutableStateOf<TarotCard?>(null) }
-    val randomDailyState by mainViewModel.randomDailyState.collectAsState()
     val lazyColumnState = rememberLazyListState()
 
     //to show only a short part of the text
@@ -1019,13 +996,10 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
         }
     }
 
-    val savedDateMillis = randomDailyState.date
-    val savedDate = Date(savedDateMillis)
+
     val state = mainViewModel.mainViewState.collectAsState()
     // Create a DateFormatter object for displaying date in specified format.
     // Now you can format the date using SimpleDateFormat
-    val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-    val formattedDate = sdf.format(savedDate)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -1147,7 +1121,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                 )
                 Spacer(modifier = Modifier.height(30.dp))
 
-                //Row
+                /*TODO - If statment check if isEmpty()*/
                 LazyColumn(
                     state = lazyColumnState,
 
@@ -1155,8 +1129,6 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                     verticalArrangement = Arrangement.Bottom,
                     modifier = Modifier
                         .fillMaxSize()
-
-                    //.background(color = Black)
 
                 ) {
                     Log.d("allcardsRandom", "${state.value.daily_cards}")
@@ -1166,7 +1138,11 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                             modifier = Modifier
                                 .padding(top = 15.dp)
                                 .size(700.dp, 80.dp)
-                                .background(color = Black)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Black, PitchBlack)
+                                    )
+                                )
                                 .clip(shape = RoundedCornerShape(20.dp))
                                 .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                         ) {
@@ -1201,7 +1177,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                     )
                                     Spacer(modifier = Modifier.width(20.dp))
                                     Text(
-                                        text = formattedDate,
+                                        text = it.date,
                                         fontSize = 14.sp,
                                         color = White,
                                         fontFamily = FontFamily(
@@ -1240,7 +1216,8 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                             Spacer(modifier = Modifier.width(20.dp))
                             IconButton(
                                 onClick = {
-                                    // delete element
+                                    /*TODO - delete element
+                                    mainViewModel.deleteButton(plant) */
                                 }
                             ) {
                                 Icon(

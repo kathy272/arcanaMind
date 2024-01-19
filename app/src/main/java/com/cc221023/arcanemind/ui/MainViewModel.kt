@@ -28,7 +28,7 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     private var tarotCards: List<TarotCard> = emptyList()
 
 
-    private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",0))
+    private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",""))
     val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
     init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()

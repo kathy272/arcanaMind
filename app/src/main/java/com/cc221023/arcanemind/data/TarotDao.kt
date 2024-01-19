@@ -36,6 +36,8 @@ interface TarotDao {
 
     @Query("SELECT * FROM daily_cards WHERE id = :id")
     fun getDailyCard(id: Int): LiveData<RandomDaily>}
+
+
 //@Dao
 //interface TarotDao {
 //    @Insert

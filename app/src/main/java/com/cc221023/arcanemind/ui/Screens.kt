@@ -6,6 +6,7 @@ sealed class Screens (val route:String){
     object Info: Screens("info")
     object Account: Screens("account")
     object DrawDailyResult: Screens("drawDailyResult")
-
     object EditCard: Screens("editCard")
+    object MajorArcana: Screens("MajorArcana")
+    object MinorArcana: Screens("MinorArcana")
 }

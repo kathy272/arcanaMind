@@ -51,6 +51,10 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.runtime:runtime-livedata:1.2.1")
+    implementation("androidx.compose.runtime:runtime:1.2.1")
+    implementation("androidx.lifecycle:lifecycle-runtime:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
@@ -70,7 +74,7 @@ dependencies {
    // implementation("androidx.room:room-ktx:2.6.1")
     //implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
     //to load images
-    implementation ("com.squareup.picasso:picasso:2.71828")
+    // implementation ("com.squareup.picasso:picasso:2.71828")
     //to save images
     implementation("io.coil-kt:coil-compose:2.5.0")
 

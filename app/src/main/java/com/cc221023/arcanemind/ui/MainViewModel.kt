@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.cc221023.arcanemind.RandomDaily
-
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.TarotCardRepository
 import com.cc221023.arcanemind.data.TarotDao
@@ -48,6 +47,21 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             Log.d("APItest", "Saved Card: $tarotCard")
         }
     }
+
+    //get major arcana cards
+    private val _majorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val majorArcanaCards: StateFlow<List<TarotCard>> get() = _majorArcanaCards
+
+    init {
+        loadMajorArcanaCards()
+    }
+
+    private fun loadMajorArcanaCards() {
+        viewModelScope.launch {
+            _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
+        }
+    }
+
     //Navigation
     fun selectScreen(screen: Screens){
         _mainViewState.update { it.copy(selectedScreen = screen) }

@@ -39,4 +39,8 @@ class TarotCardRepository(private val context: Context) {
             jsonObject.getString("desc"),
         )
     }
+    fun getMajorArcanaCards(): List<TarotCard> {
+        val allCards = getTarotCardsFromJson()
+        return allCards.filter { it.type == "major" }
+    }
 }

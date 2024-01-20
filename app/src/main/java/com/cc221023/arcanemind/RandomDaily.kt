@@ -13,5 +13,5 @@ data class RandomDaily(
     val comment: String = "",
     val name_short: String = "",
     val imgUrl: String = "",
-    val date: Long = 0,
+    val date: String = "",
 )

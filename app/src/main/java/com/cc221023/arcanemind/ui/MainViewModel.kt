@@ -28,7 +28,7 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
     private var tarotCards: List<TarotCard> = emptyList()
 
 
-    private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",0))
+    private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",""))
     val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
     init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()
@@ -68,9 +68,26 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             dao.getAllDailyCards().collect() { allRandomCards ->
                 _mainViewState.update { it.copy(daily_cards = allRandomCards) }
                 Log.d("AllCardsRandom", "All Cards: $allRandomCards")
+                Log.d("Delete","got all cards")
             }
         }
     }
+
+    fun deleteButton(dailyCard: RandomDaily){
+        viewModelScope.launch {
+            dao.delete(dailyCard)
+            Log.d("Delete","Clicked on delete, dailyCard: ${dailyCard}")
+        }
+        getAllDailyCards()
+        Log.d("Delete","get all cards")
+    }
+
+    /*fun deleteButton(plant: NewPlant){
+        viewModelScope.launch {
+            dao.deletePlant(plant)
+        }
+        getPlants()
+    }*/
 
     fun updateDailyRandomCard(dailyCard: RandomDaily){
         viewModelScope.launch {

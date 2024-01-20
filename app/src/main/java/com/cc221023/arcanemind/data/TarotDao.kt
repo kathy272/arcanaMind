@@ -20,7 +20,7 @@ interface TarotDao {
     fun update(dailyCard: RandomDaily)
 
     @Delete
-    fun delete(dailyCard: RandomDaily)
+    suspend fun delete(dailyCard: RandomDaily)
 
     @Query("DELETE FROM tarot_cards")
     fun deleteAllCards()

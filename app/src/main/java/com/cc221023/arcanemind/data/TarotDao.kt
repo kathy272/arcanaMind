@@ -35,9 +35,11 @@ interface TarotDao {
     fun getAllDailyCards(): Flow<List<RandomDaily>>
 
     @Query("SELECT * FROM daily_cards WHERE id = :id")
-    fun getDailyCard(id: Int): LiveData<RandomDaily>}
+    fun getDailyCard(id: Int): LiveData<RandomDaily>
 
-
+    @Query("SELECT COUNT(*) FROM daily_cards")
+    fun getNumberOfSavedCards(): LiveData<Int>
+}
 //@Dao
 //interface TarotDao {
 //    @Insert

@@ -30,6 +30,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +61,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter.Companion.tint
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -168,7 +172,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 drawRect(
                     brush = linearGradient,
                     topLeft = Offset(0f, 0f),
-                    size = size)
+                    size = size
+                )
             }
 
 
@@ -193,7 +198,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 onClick = { navController.navigate(Screens.Info.route) },
                 modifier = Modifier
                     .padding(15.dp)
-                    .absoluteOffset(x=0.dp, y=(-27).dp)
+                    .absoluteOffset(x = 0.dp, y = (-27).dp)
                   ,
                 label = {
                     Text(
@@ -228,7 +233,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 onClick = { navController.navigate(Screens.Home.route) },
                 modifier = Modifier
                     .padding(15.dp)
-                    .absoluteOffset(x=0.dp, y=(-27).dp),
+                    .absoluteOffset(x = 0.dp, y = (-27).dp),
                 label = {
                     Text(
                         "Home",
@@ -261,7 +266,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 modifier = Modifier
                     .shadow(50.dp)
                     .padding(15.dp)
-                    .absoluteOffset(x=0.dp, y=(-27).dp),
+                    .absoluteOffset(x = 0.dp, y = (-27).dp),
                 label = {
                     Text(
                         "Account",
@@ -421,7 +426,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             }}
                     Column(
                         modifier = Modifier
-                            .padding(top=580.dp, start = 45.dp, end = 45.dp)
+                            .padding(top = 580.dp, start = 45.dp, end = 45.dp)
                             .clip(RoundedCornerShape(20.dp))
 
                             .fillMaxWidth()
@@ -439,7 +444,7 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         fontSize = 16.sp,
                         lineHeight = 25.sp,
                         modifier = Modifier
-                            .padding(top=10.dp)
+                            .padding(top = 10.dp)
 
                             .fillMaxSize()
                             .padding(10.dp)
@@ -592,6 +597,7 @@ fun DrawDailyScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayDailyResultScreen(
@@ -1048,6 +1054,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+
     //to show only a short part of the text
 
     val maxLength = 20
@@ -1198,6 +1205,14 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                            .fillMaxSize(),
                        horizontalAlignment = Alignment.CenterHorizontally,
                    ) {
+                       Image(
+                           painter = painterResource(id = R.drawable.witchy_stuff),
+                           contentDescription = "divider",
+                           modifier = Modifier
+
+                               .scale(1.3f)
+
+                       )
                        Text(
                            text = "Seems like you haven't drawn a card yet...",
                            fontWeight = FontWeight.Bold,
@@ -1216,7 +1231,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                     LazyColumn(
                         state = lazyColumnState,
                         horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Bottom,
+                        verticalArrangement = Arrangement.Top,
                         modifier = Modifier
                             .fillMaxSize()
 
@@ -1412,8 +1427,11 @@ fun EditCardModal(mainViewModel: MainViewModel) {
     )
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+    var searchText by remember { mutableStateOf("") }
     val majorArcanaCards by mainViewModel.majorArcanaCards.collectAsState()
 
     Log.d("MajorArcana", "majorArcanaCards: $majorArcanaCards")
@@ -1453,39 +1471,77 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                 modifier = Modifier
                     .absoluteOffset(x = 0.dp, y = (-25).dp),
             )
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { newText -> searchText = newText },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .height(50.dp)
+                    .absoluteOffset(x = 0.dp, y = (-25).dp),
 
+                label = { Text("Search by name", color = Color.White) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = Color.White, // Change the tint color of the search icon
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(4.dp)
+                    )
+                },
+                singleLine = true,
+
+            )
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2), // Set the number of items in each row (change as needed)
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
-                    .absoluteOffset(x = 0.dp, y = 20.dp),
+                    //.padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
+                    //.absoluteOffset(x = 0.dp, y = 20.dp),
             ) {
-                items(majorArcanaCards) { card ->
+
+                val filteredCards = majorArcanaCards.filter {
+                    it.name.contains(searchText, ignoreCase = true)
+                }
+
+
+                items((filteredCards)) { card ->
                     Button(
                         onClick = { /*TODO - make navigation to single card view*/ },
+                        shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(0.dp),
+                            .size(700.dp, 300.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Transparent
+                            containerColor = Color.Transparent,
+
                         )
                     ) {
                         Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top,
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxWidth()
                                 .padding(0.dp)
+
                         ) {
                             // Display image
+                            Box(  modifier = Modifier
+                                .width(300.dp)
+                                .clip(shape = RoundedCornerShape(15.dp))
+                                .background(color = Color.White)
+                            ){
                             Image(
                                 painter = rememberAsyncImagePainter(
                                     model = "https://sacred-texts.com/tarot/pkt/img/${card.nameShort}.jpg"
                                 ),
                                 contentDescription = "Tarot Card",
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(225.dp) // Adjust the height as needed
-                            )
+
+                                    .padding(start = 10.dp, end = 10.dp)
+                                    .size(200.dp, 225.dp)
+                            )}
                             // Display card name
                             Text(
                                 text = card.name,
@@ -1499,8 +1555,9 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                                 ),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
-                                    .padding(bottom = 8.dp)
+                                    .padding(top = 8.dp)
                                     .fillMaxWidth()
+                                    .height(50.dp)
                             )
                         }
                     }

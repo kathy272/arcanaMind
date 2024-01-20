@@ -2,6 +2,7 @@ package com.cc221023.arcanemind.ui
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(private val dao: TarotDao, private val context: Context) : ViewModel() {
+class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
 
     private val _tarotCardState = MutableStateFlow(TarotCard("","", "", "",  0, "", "", ""))
     val tarotCardState: StateFlow<TarotCard> = _tarotCardState.asStateFlow()
@@ -30,6 +31,11 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
 
     private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",""))
     val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
+
+
+
+
+
     init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()
     }
@@ -107,6 +113,8 @@ class MainViewModel(private val dao: TarotDao, private val context: Context) : V
             _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
         }
     }
+
+
 
     //Navigation
     fun selectScreen(screen: Screens){

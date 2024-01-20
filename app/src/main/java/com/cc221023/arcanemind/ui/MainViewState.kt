@@ -1,7 +1,10 @@
 package com.cc221023.arcanemind.ui
 
+import androidx.lifecycle.LiveData
 import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 data class MainViewState (
     val selectedScreen: Screens = Screens.Home,

@@ -103,7 +103,7 @@ fun MainView(mainViewModel: MainViewModel) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = Screens.Home.route
+            startDestination = Screens.Info.route
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
@@ -927,7 +927,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         onClick = { mainViewModel.navigateToMinorArcanaScreen(navController) },
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .height(195.dp)
+                            .height(270.dp)
                             .width(165.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
@@ -958,11 +958,12 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                                     .zIndex(1f)
                             ) {}
                             Image(
-                                painter = painterResource(id = R.drawable.tarotcards),
+                                //painter = painterResource(id = R.drawable.tarotcards),
+                                painter = painterResource(id = R.drawable.hand_left),
                                 contentDescription = "tarot cards",
                                 modifier = Modifier
-                                    .scale(1.2f)
-                                    .absoluteOffset(x = 20.dp, y = (-18).dp)
+                                    .scale(1.7f)
+                                    .absoluteOffset(x = -18.dp, y = (-18).dp)
                                     .zIndex(2f)
                             )
                             //Spacer(modifier = Modifier.height(90.dp))
@@ -982,7 +983,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                         onClick = { mainViewModel.navigateToMajorArcanaScreen(navController) },
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .height(195.dp)
+                            .height(270.dp)
                             .width(170.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
@@ -1013,11 +1014,13 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                                     .zIndex(1f)
                             ) {}
                             Image(
-                                painter = painterResource(id = R.drawable.fourcards),
+                               // painter = painterResource(id = R.drawable.fourcards),
+                                painter = painterResource(id = R.drawable.hand_right),
+
                                 contentDescription = "tarot cards",
                                 modifier = Modifier
-                                    .scale(1.4f)
-                                    .absoluteOffset(x = 12.dp, y = (-14).dp)
+                                    .scale(1.7f)
+                                    .absoluteOffset(x = 25.dp, y = (-18).dp)
                                     .zIndex(2f)
                             )
                             //Spacer(modifier = Modifier.height(90.dp))

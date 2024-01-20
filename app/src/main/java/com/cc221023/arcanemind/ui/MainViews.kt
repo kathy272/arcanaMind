@@ -152,16 +152,34 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .drawWithContent {
+                drawContent()
+                val linearGradient = Brush.verticalGradient(
+                    colors = listOf(
+                        PitchBlack.copy(alpha = 0.3f),
+                        PitchBlack.copy(alpha = 0.2f),
+                        PitchBlack.copy(alpha = 0.1f),
+                        PitchBlack.copy(alpha = 0.0f)
+                    ),
+                    startY = 0.0f,
+                    endY = 30f,
+                )
 
-            .background(color = Color.Transparent)
+                drawRect(
+                    brush = linearGradient,
+                    topLeft = Offset(0f, 0f),
+                    size = size)
+            }
+
 
     ) {
+
         BottomNavigation(
             backgroundColor = Black,
             contentColor = Black,
             modifier = Modifier
-                .zIndex(2f)
-
+                .zIndex(1f)
+                .height(60.dp)
             ,
         ) {
             NavigationBarItem(
@@ -170,19 +188,34 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     unselectedIconColor = EggShelly,
                     indicatorColor = EggShelly,
                 ),
+
                 selected = (selectedScreen == Screens.Info),
                 onClick = { navController.navigate(Screens.Info.route) },
                 modifier = Modifier
-                    .shadow(50.dp)    .zIndex(1f)
-                    .padding(10.dp),
+                    .padding(15.dp)
+                    .absoluteOffset(x=0.dp, y=(-27).dp)
+                  ,
+                label = {
+                    Text(
+                        "Info",
+                        fontSize = 12.sp,
+                        color = EggShelly,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                            .absoluteOffset(x = 0.dp, y = (55).dp),
+
+                        )
+                },
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.cardsicon),
                         contentDescription = null,
                         modifier = Modifier
                             .size(70.dp, 70.dp)
+
                     )
-                }
+                },
+
             )
 
             NavigationBarItem(
@@ -194,8 +227,19 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 selected = (selectedScreen == Screens.Home),
                 onClick = { navController.navigate(Screens.Home.route) },
                 modifier = Modifier
-                    .shadow(50.dp)
-                    .padding(10.dp),
+                    .padding(15.dp)
+                    .absoluteOffset(x=0.dp, y=(-27).dp),
+                label = {
+                    Text(
+                        "Home",
+                        fontSize = 12.sp,
+                        color = EggShelly,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                            .absoluteOffset(x = 0.dp, y = (55).dp),
+
+                        )
+                },
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.homeicon),
@@ -216,7 +260,19 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 onClick = { navController.navigate(Screens.Account.route) },
                 modifier = Modifier
                     .shadow(50.dp)
-                    .padding(10.dp),
+                    .padding(15.dp)
+                    .absoluteOffset(x=0.dp, y=(-27).dp),
+                label = {
+                    Text(
+                        "Account",
+                        fontSize = 12.sp,
+                        color = EggShelly,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                            .absoluteOffset(x = 0.dp, y = (55).dp),
+
+                        )
+                },
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.profileicon),
@@ -227,7 +283,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                 }
             )
         }
-    }}
+    }
+}
 
 
 @Composable

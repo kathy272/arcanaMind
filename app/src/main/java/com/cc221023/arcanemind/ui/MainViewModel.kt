@@ -2,7 +2,6 @@ package com.cc221023.arcanemind.ui
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -88,18 +87,21 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
         Log.d("Delete","get all cards")
     }
 
-    /*fun deleteButton(plant: NewPlant){
-        viewModelScope.launch {
-            dao.deletePlant(plant)
-        }
-        getPlants()
-    }*/
-
-    fun updateDailyRandomCard(dailyCard: RandomDaily){
+    fun updateRandomDailyCard(dailyCard: RandomDaily){
         viewModelScope.launch {
             dao.update(dailyCard)
         }
         getAllDailyCards()
+        closeDialog()
+    }
+
+    fun editRandomDailyCard(dailyCard: RandomDaily){
+        _randomDailyState.value = dailyCard
+        _mainViewState.update { it.copy(openDialog = true) }
+    }
+
+    fun closeDialog(){
+        _mainViewState.update { it.copy(openDialog = false) }
     }
 
     //get major arcana cards

@@ -17,7 +17,7 @@ interface TarotDao {
     suspend fun insert(dailyCard: RandomDaily)
 
     @Update
-    fun update(dailyCard: RandomDaily)
+    suspend fun update(dailyCard: RandomDaily)
 
     @Delete
     suspend fun delete(dailyCard: RandomDaily)

@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,10 +59,8 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter.Companion.tint
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -1237,7 +1236,9 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 
                     ) {
                         Log.d("allcardsRandom", "${state.value.daily_cards}")
-                        items(state.value.daily_cards.reversed()) {
+                        items(
+                            state.value.daily_cards.reversed()
+                        ) {
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier
@@ -1250,6 +1251,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                         )
                                     )
                                     .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                                    .clickable { mainViewModel.editRandomDailyCard(it) }
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.Start,
@@ -1316,7 +1318,6 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                             .padding(start = 15.dp, top = 5.dp)
 
                                     )
-
                                 }
                                 Spacer(modifier = Modifier.width(20.dp))
                                 IconButton(
@@ -1390,6 +1391,8 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                         }
                                     )
                                 }
+                                Log.d("EditCard","Clicked on Text")
+                                EditCardModal(mainViewModel)
                             }
                         }
                     }
@@ -1404,27 +1407,80 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 @Composable
 fun EditCardModal(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
+    val randomCardState by mainViewModel.randomDailyState.collectAsState()
+    Log.d("EditCard","In EditCardModal, openDialog: ${state.value.openDialog}")
 
-    AlertDialog(
-        onDismissRequest = {
-            // mainViewModel.closeDialog()
-        },
-        text = {
-            // text and text fields
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    // TarotCard()
-                },
-                modifier = Modifier
-                    .padding(bottom = 10.dp),
+    if (state.value.openDialog) {
+        var comment by rememberSaveable { mutableStateOf(randomCardState.comment) }
 
-                ) {
-                Text(text = "Confirm", color = EggShelly)
+        AlertDialog(
+            onDismissRequest = {
+                mainViewModel.closeDialog()
+            },
+            contentColor = White,
+            backgroundColor = Black,
+            text = {
+                Column {
+                    Text(
+                        text = "Edit your comment",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        style = TextStyle(
+                            color = EggShelly,
+                            fontFamily = FontFamily(
+                                Font(R.font.almendra_bold, FontWeight.Light)
+                            ),
+                        )
+                    )
+
+                    TextField(
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .clip(RoundedCornerShape(20.dp)),
+                        value = comment,
+                        onValueChange = { newText -> comment = newText },
+                        label = { Text(text = "comment") },
+                        colors = TextFieldDefaults.textFieldColors(
+                            textColor = Black,
+                            focusedLabelColor = DarkGray,
+                            unfocusedLabelColor = DarkGray,
+                            containerColor = White,
+                            unfocusedIndicatorColor = Black,
+                            focusedIndicatorColor = Black
+                        )
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        Log.d("EditCard","On confirm, ${randomCardState}")
+                        mainViewModel.updateRandomDailyCard(
+                            RandomDaily(
+                                randomCardState.name,
+                                randomCardState.id,
+                                randomCardState.meaningUp,
+                                randomCardState.desc,
+                                comment,
+                                randomCardState.name_short,
+                                randomCardState.imgUrl,
+                                randomCardState.date
+                            )
+                        )
+                        Log.d("EditCard","Updated comment")
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 20.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EggShelly,
+                        contentColor = Black
+                    ),
+                    ) {
+                    Text(text = "Confirm", color = Black)
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 

@@ -11,4 +11,10 @@ sealed class Screens (val route:String){
     object MinorArcana: Screens("MinorArcana")
     object UnderstandingTarot: Screens("understandingTarot")
     object Reading: Screens("reading")
+    object CardDetail: Screens( "cardDetail/{nameShort}") {
+
+        fun createRoute(nameShort: String): String {
+            return "cardDetail/$nameShort"
+        }
+    }
 }

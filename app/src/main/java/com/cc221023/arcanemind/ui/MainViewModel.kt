@@ -49,6 +49,20 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
             }
         }
     }
+    fun fetchCardDetails(nameShort: String) { //to fetch card details by nameShort
+        Log.d("APItest", "Tries fetching $nameShort")
+        val card = tarotCards.find { it.nameShort == nameShort }
+
+        if (card != null) {
+            viewModelScope.launch {
+                _tarotCardState.value = card
+                Log.d("APItest", "Selected Card: $card")
+            }
+        } else {
+            Log.e("APItest", "Card with nameShort $nameShort not found")
+        }
+    }
+
 
     fun saveRandomCard(dailyCard: RandomDaily) {
         Log.d("APItest", "Tries saving")
@@ -115,6 +129,16 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
             _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
         }
     }
+    private val _minorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val minorArcanaCards: StateFlow<List<TarotCard>> get() = _minorArcanaCards
+    init {
+        loadMinorArcanaCards()
+    }
+    private fun loadMinorArcanaCards() {
+        viewModelScope.launch {
+            _minorArcanaCards.value = tarotCardRepository.getMinorArcanaCards()
+        }
+    }
 
 
 
@@ -122,18 +146,5 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
     fun selectScreen(screen: Screens){
         _mainViewState.update { it.copy(selectedScreen = screen) }
     }
-    // Account and Info missing
-    fun navigateToHomeScreen(navController: NavController) {
-        navController.navigate(Screens.Home.route)
-    }
-    fun navigateToDrawDailyScreen(navController: NavController) {
-        navController.navigate(Screens.DrawDaily.route)
-    }
 
-    fun navigateToMinorArcanaScreen(navController: NavController){
-        navController.navigate((Screens.MinorArcana.route))
-    }
-    fun navigateToMajorArcanaScreen(navController: NavController){
-        navController.navigate((Screens.MajorArcana.route))
-    }
 }

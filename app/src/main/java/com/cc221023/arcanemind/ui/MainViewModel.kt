@@ -115,6 +115,16 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
             _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
         }
     }
+    private val _minorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val minorArcanaCards: StateFlow<List<TarotCard>> get() = _minorArcanaCards
+    init {
+        loadMinorArcanaCards()
+    }
+    private fun loadMinorArcanaCards() {
+        viewModelScope.launch {
+            _minorArcanaCards.value = tarotCardRepository.getMinorArcanaCards()
+        }
+    }
 
 
 
@@ -136,4 +146,16 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
     fun navigateToMajorArcanaScreen(navController: NavController){
         navController.navigate((Screens.MajorArcana.route))
     }
+ fun navigateToUnderstandingTarotScreen(navController: NavController){
+        navController.navigate((Screens.UnderstandingTarot.route))
+    }
+    fun navigateToReadingScreen(navController: NavController){
+        navController.navigate((Screens.Reading.route))
+    }
+    fun navigateToDrawDailyResultScreen(navController: NavController) {
+        navController.navigate(Screens.DrawDailyResult.route)
+    }
+    fun navigateToEditCardScreen(navController: NavController) {
+        navController.navigate(Screens.EditCard.route)
+ }
 }

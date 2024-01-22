@@ -43,4 +43,9 @@ class TarotCardRepository(private val context: Context) {
         val allCards = getTarotCardsFromJson()
         return allCards.filter { it.type == "major" }
     }
+
+    fun getMinorArcanaCards(): List<TarotCard> {
+        val allCards = getTarotCardsFromJson()
+        return allCards.filter { it.type == "minor" }
+    }
 }

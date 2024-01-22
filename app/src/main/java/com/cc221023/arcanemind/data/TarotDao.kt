@@ -39,6 +39,8 @@ interface TarotDao {
 
     @Query("SELECT COUNT(*) FROM daily_cards")
     fun getNumberOfSavedCards(): LiveData<Int>
+
+
 }
 //@Dao
 //interface TarotDao {

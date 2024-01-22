@@ -119,6 +119,7 @@ fun MainView(mainViewModel: MainViewModel) {
             }
             composable(Screens.Account.route) {
                 mainViewModel.selectScreen(Screens.Account)
+                mainViewModel.getNumberOfSavedCards()
                 mainViewModel.getAllDailyCards()
                 AccountScreen(mainViewModel, navController)
             }
@@ -621,7 +622,7 @@ fun DisplayDailyResultScreen(
     val randomCardState by mainViewModel.tarotCardState.collectAsState()
     val lazyColumnState = rememberLazyListState()
 
-    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, randomCardState: ${randomCardState}")
+   // Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, randomCardState: ${randomCardState}")
 
     Box(
         modifier = Modifier
@@ -1065,7 +1066,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
     val lazyColumnState = rememberLazyListState()
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
+    val drawnCardsCount = mainViewModel.getNumberOfSavedCards()
 
     //to show only a short part of the text
 
@@ -1085,7 +1086,11 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
             text
         }
     }
+    val minorArcanaCards by mainViewModel.minorArcanaCards.collectAsState()
+    val daily_cards: List<RandomDaily> = emptyList()
 
+
+    val numberOfCards= daily_cards.size
 
     val state = mainViewModel.mainViewState.collectAsState()
     // Create a DateFormatter object for displaying date in specified format.
@@ -1248,7 +1253,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                             .fillMaxSize()
 
                     ) {
-                        Log.d("allcardsRandom", "${state.value.daily_cards}")
+                   //     Log.d("allcardsRandom", "${state.value.daily_cards}")
                         items(
                             state.value.daily_cards.reversed()
                         ) {
@@ -1416,12 +1421,15 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 }
 
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditCardModal(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val randomCardState by mainViewModel.randomDailyState.collectAsState()
-    Log.d("EditCard","In EditCardModal, openDialog: ${state.value.openDialog}")
+   // Log.d("EditCard","In EditCardModal, openDialog: ${state.value.openDialog}")
 
     if (state.value.openDialog) {
         var comment by rememberSaveable { mutableStateOf(randomCardState.comment) }
@@ -1467,7 +1475,7 @@ fun EditCardModal(mainViewModel: MainViewModel) {
             confirmButton = {
                 Button(
                     onClick = {
-                        Log.d("EditCard","On confirm, ${randomCardState}")
+                      //  Log.d("EditCard","On confirm, ${randomCardState}")
                         mainViewModel.updateRandomDailyCard(
                             RandomDaily(
                                 randomCardState.name,
@@ -1586,7 +1594,7 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
 
 
                 items((filteredCards)) { card ->
-                    Log.d("MajorArcana", "card: ${card.nameShort}")
+                 //   Log.d("MajorArcana", "card: ${card.nameShort}")
                     Button(
                         onClick = { navController.navigate(Screens.CardDetail.createRoute(card.nameShort))
                         },
@@ -1654,7 +1662,7 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
     var searchText by remember { mutableStateOf("") }
     val minorArcanaCards by mainViewModel.minorArcanaCards.collectAsState()
 
-    Log.d("MinorArcana", "minorArcanaCards: $minorArcanaCards")
+   // Log.d("MinorArcana", "minorArcanaCards: $minorArcanaCards")
 
     Box(
         modifier = Modifier
@@ -2106,7 +2114,6 @@ fun CardDetailScreen(
     val scrollState = rememberScrollState()
     val lazyColumnState = rememberLazyListState()
     val tarotCardState by mainViewModel.tarotCardState.collectAsState()
-    Log.d("DisplayDaily","Switches Screens to DisplayDailyResultScreen, randomCardState: ${tarotCardState}")
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -2164,7 +2171,6 @@ fun CardDetailScreen(
                     .fillMaxSize()
                     .padding(top = 75.dp, start = 25.dp, end = 25.dp)
             ) {
-                // Display the randomly drawn card
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -2193,8 +2199,8 @@ fun CardDetailScreen(
 
                             ) {
                                 AsyncImage(
-                                    model = "https://sacred-texts.com/tarot/pkt/img/${tarotCardState?.nameShort}.jpg",
-                                    contentDescription = "${tarotCardState?.desc}",
+                                    model = "https://sacred-texts.com/tarot/pkt/img/${tarotCardState.nameShort}.jpg",
+                                    contentDescription = tarotCardState.desc,
                                     modifier = Modifier
                                         .fillMaxWidth()
 
@@ -2213,7 +2219,6 @@ fun CardDetailScreen(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                //LoadImageFromUrl("https://sacred-texts.com/tarot/pkt/img/ar${randomCardState?.id}.jpg")
 
                                 Box(
                                     modifier = Modifier
@@ -2258,7 +2263,6 @@ fun CardDetailScreen(
 
                     }
                 }
-                // Add more components to display card details
             }
         }}
 }

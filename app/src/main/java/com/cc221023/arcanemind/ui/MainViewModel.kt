@@ -2,6 +2,7 @@ package com.cc221023.arcanemind.ui
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -30,6 +31,7 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
 
     private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",""))
     val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
+    var dailyCards: List<RandomDaily> = emptyList()
 
 
 
@@ -112,6 +114,9 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
     fun editRandomDailyCard(dailyCard: RandomDaily){
         _randomDailyState.value = dailyCard
         _mainViewState.update { it.copy(openDialog = true) }
+    }
+    fun getNumberOfSavedCards(): LiveData<Int> {
+        return dao.getNumberOfSavedCards()
     }
 
     fun closeDialog(){

@@ -741,7 +741,7 @@ fun DisplayDailyResultScreen(
                 TextField(
                     value = comment,
                     onValueChange = { newText -> comment = newText },
-                    label = { Text(text = "Add your interpretation...") },
+                    label = { Text(text = "Add your interpretation (you can also do this later)...") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)

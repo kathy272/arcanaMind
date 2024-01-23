@@ -61,6 +61,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -89,6 +90,7 @@ import com.cc221023.arcanemind.ui.theme.DarkGray
 import com.cc221023.arcanemind.ui.theme.EggShelly
 import com.cc221023.arcanemind.ui.theme.MidGray
 import com.cc221023.arcanemind.ui.theme.PitchBlack
+import com.cc221023.arcanemind.ui.theme.Red
 import com.cc221023.arcanemind.ui.theme.White
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -2054,7 +2056,7 @@ fun ReadingScreen(mainViewModel: MainViewModel, navController: NavHostController
                         textAlign = TextAlign.Justify,
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier
+                        modifier = Modifier.padding(10.dp)
                     )
                     Row(
                         Modifier
@@ -2097,7 +2099,7 @@ fun ReadingScreen(mainViewModel: MainViewModel, navController: NavHostController
                             textAlign = TextAlign.Justify,
                             fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                            modifier = Modifier
+                            modifier = Modifier.padding(10.dp)
                         )
                         Text(  "Additional Tips:\n", color = EggShelly,
                             fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),

@@ -10,3 +10,5 @@ val LightGray = Color(0xFFD9D9D9)
 
 val White = Color(0xFFF8F8F8)
 val EggShelly = Color(0xFFE5DFCF)
+
+val Red = Color(0xFFCE4D4D)

@@ -314,7 +314,7 @@ LazyColumn(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 5.dp)
+            .padding(start = 25.dp, end = 25.dp, top = 30.dp, bottom = 5.dp)
 
     ) {
         Text(
@@ -415,7 +415,7 @@ LazyColumn(
 
             .fillMaxWidth()
             .background(color = PitchBlack)
-            .height(170.dp)
+            .height(140.dp)
             .border(1.dp, DarkGray, RoundedCornerShape(20.dp) )){
 
         Text(
@@ -429,7 +429,7 @@ LazyColumn(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                .height(470.dp)
+
 
         )
     }
@@ -503,7 +503,7 @@ fun DrawDailyScreen(
             color = White,
             fontSize = 44.sp,
             fontFamily = FontFamily(Font(R.font.almendra_bold,)),
-            modifier = Modifier.padding(top = 70.dp, start = 25.dp, end = 25.dp, bottom = 25.dp),
+            modifier = Modifier.padding(top = 60.dp, start = 25.dp, end = 25.dp, bottom = 25.dp),
             textAlign = TextAlign.Center,
             lineHeight = 55.sp
         )
@@ -513,7 +513,7 @@ fun DrawDailyScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .scale(1.3f)
-                .padding(top = 20.dp)
+                .padding(top = 10.dp)
         )
 
         Column(
@@ -530,7 +530,7 @@ fun DrawDailyScreen(
                 fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .padding(top = 20.dp, start = 25.dp, end = 25.dp)
+                    .padding(top = 0.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
                     .fillMaxWidth()
             )
 
@@ -538,7 +538,7 @@ fun DrawDailyScreen(
                 painter = painterResource(id = R.drawable.line),
                 contentDescription = "line",
                 modifier = Modifier
-                    .size(350.dp, 100.dp)
+                    .scale(2.3f)
 
             )
 
@@ -551,6 +551,7 @@ fun DrawDailyScreen(
                     shape = RoundedCornerShape(15.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding( top = 25.dp)
                         .height(65.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = EggShelly,
@@ -822,28 +823,21 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 25.dp, top = 0.dp, end = 20.dp, bottom = 0.dp)
+                .padding(start = 25.dp, top = 30.dp, end = 20.dp, bottom = 0.dp)
 
         ) {item{
             Text(
                 buildAnnotatedString {
-                    append("Your tarot\n")
+                    append("Your tarot\n"+
+                            "archive\n")
                 },
                 fontSize = 50.sp,
+                lineHeight = 55.sp,
                 color = White,
                 fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
                 modifier = Modifier
             )
-            Text(
-                buildAnnotatedString {
-                    append("archive\n")
-                },
-                fontSize = 50.sp,
-                color = White,
-                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                modifier = Modifier
-                    .absoluteOffset(x = 0.dp, y = (-65).dp)
-            )
+
             Text(
                 buildAnnotatedString {
                     append("Stay educated!")
@@ -852,12 +846,12 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
-                    .absoluteOffset(x = 0.dp, y = (-120).dp)
+                    .absoluteOffset(x = 0.dp, y = (-65).dp)
             )
 
             Box(
                 modifier = Modifier
-                    .absoluteOffset(y = (-105).dp)
+                    .absoluteOffset(y = (-55).dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(color = PitchBlack)
                     .fillMaxWidth()
@@ -881,7 +875,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp)
-                    .absoluteOffset(y = (-95).dp),
+                    .absoluteOffset(y = (-45).dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EggShelly,
                     contentColor = Black,
@@ -907,7 +901,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(65.dp)
-                    .absoluteOffset(y = (-85).dp)
+                    .absoluteOffset(y = (-35).dp)
                     .clip(shape = RectangleShape),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EggShelly,
@@ -931,8 +925,8 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier
-                    .absoluteOffset(y = (-65).dp)
-                    .height(300.dp)
+                    .absoluteOffset(y = (-20).dp)
+                    .height(250.dp)
                     .fillMaxWidth()
                     .clip(shape = RectangleShape),
             ) {
@@ -961,9 +955,9 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                     ) {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxSize()
                                 .padding(0.dp)
-                                .height(200.dp)
+
                                 .width(145.dp)
                                 .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                                 .zIndex(1f)
@@ -975,7 +969,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             contentDescription = "tarot cards",
                             modifier = Modifier
                                 .scale(1.5f)
-                                .absoluteOffset(x = (-20).dp, y = (-32).dp)
+                                .absoluteOffset(x = (-20).dp, y = (-22).dp)
                                 .zIndex(2f)
                         )
                         //Spacer(modifier = Modifier.height(90.dp))
@@ -986,7 +980,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             color = EggShelly,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .absoluteOffset(x = 15.dp, y = 100.dp)
+                                .absoluteOffset(x = 15.dp, y = 120.dp)
                             ,
                             textAlign = TextAlign.Start
                         )
@@ -1031,7 +1025,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             contentDescription = "tarot cards",
                             modifier = Modifier
                                 .scale(1.5f)
-                                .absoluteOffset(x = 35.dp, y = (-25).dp)
+                                .absoluteOffset(x = 35.dp, y = (-20).dp)
                                 .zIndex(2f)
                         )
                         //Spacer(modifier = Modifier.height(90.dp))
@@ -1042,7 +1036,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             color = EggShelly,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .absoluteOffset(x = 15.dp, y = 100.dp)
+                                .absoluteOffset(x = 15.dp, y = 120.dp)
                             ,
                             textAlign = TextAlign.Start
                         )
@@ -1105,7 +1099,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
+                .padding(start = 25.dp, end = 25.dp, top = 30.dp, bottom = 25.dp)
         ) {
             Text(
                 buildAnnotatedString { append("Hello, stranger!\n") },
@@ -1528,7 +1522,7 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
             Text(
@@ -1685,7 +1679,7 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
             Text(

@@ -376,7 +376,6 @@ Column(
                             .zIndex(2f)
 
                     )
-                   //Spacer(modifier = Modifier.height(90.dp))
                     Text(
                         "Daily card",
                         fontSize = 22.sp,
@@ -407,17 +406,6 @@ Column(
                 }
             }
 
-
-//    Column(
-//        modifier = Modifier
-//            .padding(top = 540.dp, start = 45.dp, end = 45.dp)
-//            .clip(RoundedCornerShape(20.dp))
-//
-//            .fillMaxWidth()
-//            .background(color = PitchBlack)
-//            .size(300.dp, 150.dp)
-//            .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
-//    ) {
     Box( modifier = Modifier
         .absoluteOffset(0.dp, (-20).dp)
             .padding(top =0.dp, start = 30.dp, end = 30.dp, bottom = 0.dp)
@@ -1202,7 +1190,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                            contentDescription = "divider",
                            modifier = Modifier
 
-                               .scale(1.3f)
+                               .scale(1.2f)
 
                        )
                        Text(
@@ -1214,7 +1202,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                            ),
                            modifier = Modifier
-                               .padding(16.dp),
+                               .padding(0.dp),
                            textAlign = TextAlign.Center
                        )
 

@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -58,7 +57,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -364,7 +362,7 @@ LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
                             .size(290.dp, 340.dp)
-                            .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                            .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
                             .zIndex(1f)
                     ) {}
 
@@ -547,7 +545,7 @@ fun DrawDailyScreen(
                         mainViewModel.fetchRandomTarotCard()
                         navController.navigate(Screens.DrawDailyResult.route)
                     },
-                    shape = RoundedCornerShape(15.dp),
+                    shape = RoundedCornerShape(35.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding( top = 25.dp)
@@ -749,7 +747,7 @@ fun DisplayDailyResultScreen(
             }
             Box(
                 modifier = Modifier
-                    .padding(top = 25.dp, start = 5.dp, end = 5.dp)
+                    .padding(top = 25.dp, start = 5.dp, end = 5.dp, bottom = 20.dp)
 
 
             ) {
@@ -774,7 +772,7 @@ fun DisplayDailyResultScreen(
                         ) // Save the card to the database
                         navController.navigate(Screens.Home.route)
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(35.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(65.dp),
@@ -870,7 +868,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             }
             Button(
                 onClick = { navController.navigate(Screens.UnderstandingTarot.route) },
-                shape = RoundedCornerShape(15.dp),
+                shape = RoundedCornerShape(35.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp)
@@ -896,7 +894,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
             Button(
                 onClick = { navController.navigate(Screens.Reading.route) },
-                shape = RoundedCornerShape(15.dp),
+                shape = RoundedCornerShape(35.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(65.dp)
@@ -956,9 +954,8 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(0.dp)
-
                                 .width(145.dp)
-                                .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                                .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
                                 .zIndex(1f)
                         ) {
                         }
@@ -1014,7 +1011,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                                 .padding(0.dp)
                                 .height(200.dp)
                                 .width(145.dp)
-                                .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                                .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
                                 .zIndex(1f)
                         ) {}
                         Image(
@@ -1063,7 +1060,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
             text
         }
     }
-    val maxLengthName = 14
+    val maxLengthName = 12
     val truncateName: (String) -> String = { text ->
         if (text.length > maxLengthName) {
             text.substring(0, maxLengthName) + "..."

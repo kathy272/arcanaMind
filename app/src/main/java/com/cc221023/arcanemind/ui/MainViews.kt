@@ -305,16 +305,16 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
         )
-Column(
+LazyColumn(
     modifier = Modifier
         .fillMaxSize()
        // .background(color = Black)
 
-) {
+) {item{
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 25.dp, end = 25.dp, top = 40.dp, bottom = 5.dp)
+            .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 5.dp)
 
     ) {
         Text(
@@ -415,7 +415,7 @@ Column(
 
             .fillMaxWidth()
             .background(color = PitchBlack)
-            .height(470.dp)
+            .height(170.dp)
             .border(1.dp, DarkGray, RoundedCornerShape(20.dp) )){
 
         Text(
@@ -433,7 +433,7 @@ Column(
 
         )
     }
-}}}
+}}}}
 
 
 
@@ -442,7 +442,8 @@ Column(
 fun DrawDailyScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
-) {
+) { val lazyColumnState = rememberLazyListState()
+    val scrollState = rememberScrollState()
     Log.d("DrawDaily", "Switches Screens to DrawDailyScreen")
     Box(
         modifier = Modifier
@@ -490,13 +491,13 @@ fun DrawDailyScreen(
                 .padding(start = 30.dp, top = 15.dp)
         )
     }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally, state = lazyColumnState,
         modifier = Modifier
             .zIndex(1f)
             .fillMaxWidth()
             .padding(top = 20.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
-    ) {
+    ) {item{
         Text(
             text = "Draw your daily card!",
             color = White,
@@ -570,7 +571,7 @@ fun DrawDailyScreen(
                     )
                 }
             }
-        }
+        }}
     }
 }
 
@@ -818,12 +819,12 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
         )
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 25.dp, top = 0.dp, end = 20.dp, bottom = 0.dp)
-                .absoluteOffset(x = 0.dp, y = 20.dp),
-        ) {
+
+        ) {item{
             Text(
                 buildAnnotatedString {
                     append("Your tarot\n")
@@ -856,11 +857,11 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
 
             Box(
                 modifier = Modifier
-                    .absoluteOffset(y = (-85).dp)
+                    .absoluteOffset(y = (-105).dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(color = PitchBlack)
                     .fillMaxWidth()
-                    .height(155.dp)
+                    .height(170.dp)
                     .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
             ) {
                 Text(
@@ -876,11 +877,11 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             }
             Button(
                 onClick = { navController.navigate(Screens.UnderstandingTarot.route) },
-                shape = RoundedCornerShape(25.dp),
+                shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(65.dp)
-                    .absoluteOffset(y = (-65).dp),
+                    .height(55.dp)
+                    .absoluteOffset(y = (-95).dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EggShelly,
                     contentColor = Black,
@@ -899,16 +900,14 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                     modifier = Modifier
                 )
             }
-            Spacer(modifier = Modifier
-                .height(15.dp)
-                .clip(shape = RectangleShape))
+
             Button(
                 onClick = { navController.navigate(Screens.Reading.route) },
-                shape = RoundedCornerShape(25.dp),
+                shape = RoundedCornerShape(15.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(65.dp)
-                    .absoluteOffset(y = (-65).dp)
+                    .absoluteOffset(y = (-85).dp)
                     .clip(shape = RectangleShape),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EggShelly,
@@ -932,8 +931,8 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom,
                 modifier = Modifier
-                    .absoluteOffset(y = (-45).dp)
-                    .height(500.dp)
+                    .absoluteOffset(y = (-65).dp)
+                    .height(300.dp)
                     .fillMaxWidth()
                     .clip(shape = RectangleShape),
             ) {
@@ -1052,7 +1051,7 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
             }
         }
     }
-}
+}}
 
 @Composable
 fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController) {
@@ -1106,12 +1105,12 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 50.dp, bottom = 25.dp)
+                .padding(start = 25.dp, end = 25.dp, top = 0.dp, bottom = 25.dp)
         ) {
             Text(
                 buildAnnotatedString { append("Hello, stranger!\n") },
                 color = White,
-                fontSize = 44.sp,
+                fontSize = 50.sp,
                 fontFamily = FontFamily(Font(R.font.almendra_bold,)),
                 modifier = Modifier.padding( end = 55.dp),
 

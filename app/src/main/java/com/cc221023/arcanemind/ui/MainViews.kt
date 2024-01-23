@@ -102,8 +102,14 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
+    val bottomBar: (@Composable () -> Unit) =
+        if (state.value.selectedScreen != Screens.DrawDailyResult) {
+            { BottomNavigationBar(navController, state.value.selectedScreen) }
+        } else {
+            { }
+        }
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController, state.value.selectedScreen) }
+     bottomBar = bottomBar
     ) {
         NavHost(
             navController = navController,
@@ -272,7 +278,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         .width(120.dp)
                 )
                 Text(
-                    "Account",
+                    "Profile",
                     fontSize = 14.sp,
                     color = EggShelly,
                     textAlign = TextAlign.Center,
@@ -635,7 +641,7 @@ fun DisplayDailyResultScreen(
         state = lazyColumnState,
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 85.dp, start = 25.dp, end = 25.dp)
+            .padding(top = 85.dp)
     ) {
         // Display the randomly drawn card
         item {
@@ -658,14 +664,14 @@ fun DisplayDailyResultScreen(
                             )
                         ),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 0.dp)
+                        modifier = Modifier.padding(bottom = 0.dp, start = 25.dp, end = 25.dp)
                     )
                     Box(
 
                         modifier = Modifier
                             .clip(shape = RoundedCornerShape(10.dp))
                             .size(500.dp, 275.dp)
-                            .padding(top = 20.dp, bottom = 0.dp, start = 95.dp, end = 95.dp)
+                            .padding(top = 20.dp, bottom = 0.dp, start = 130.dp, end = 130.dp)
                             .background(color = Color.White, RoundedCornerShape(20.dp))
                     ) {
                         AsyncImage(
@@ -674,13 +680,13 @@ fun DisplayDailyResultScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(shape = RoundedCornerShape(10.dp))
-                                .padding(top = 10.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
+                                .padding(10.dp)
                                 .zIndex(1f)
                         )
                     }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = 20.dp)
+                        modifier = Modifier.padding(top = 20.dp,start = 25.dp, end = 25.dp)
                     ) {
                         Box(
                             modifier = Modifier
@@ -708,7 +714,7 @@ fun DisplayDailyResultScreen(
         item {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .padding(start = 25.dp, end = 25.dp)
                     .height(250.dp)
                     .background(
                         brush = Brush.verticalGradient(
@@ -727,7 +733,7 @@ fun DisplayDailyResultScreen(
                     fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(
-                        top = 10.dp,
+                        top = 15.dp,
                         start = 20.dp,
                         end = 10.dp,
                         bottom = 10.dp
@@ -741,7 +747,7 @@ fun DisplayDailyResultScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(10.dp)
+                        .padding(15.dp)
                         .absoluteOffset(0.dp, 34.dp)
                         .clip(shape = RoundedCornerShape(25.dp)),
                     colors = TextFieldDefaults.textFieldColors(containerColor = White)
@@ -774,9 +780,9 @@ fun DisplayDailyResultScreen(
                         ) // Save the card to the database
                         navController.navigate(Screens.Home.route)
                     },
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(35.dp),
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().padding(top = 10.dp, start = 25.dp, end = 25.dp)
                         .height(65.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = EggShelly,

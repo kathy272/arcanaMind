@@ -328,11 +328,10 @@ LazyColumn(
         )
         Text(
             buildAnnotatedString { append("Have an arcane day!") },
-            fontSize = 18.sp,
-            color = Color.LightGray,
+            fontSize = 20.sp,
+            color = MidGray,
             fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-            modifier = Modifier
-                .zIndex(1f),
+
         )
     }
 
@@ -693,7 +692,7 @@ fun DisplayDailyResultScreen(
                                 .border(1.dp, DarkGray, RoundedCornerShape(20.dp)),
                         ) {
                             Text(
-                                text = " ${randomCard.meaningUp}",
+                                text = "${randomCard.meaningUp}",
                                 color = White,
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Start,
@@ -1108,7 +1107,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                 fontFamily = FontFamily(Font(R.font.almendra_bold,)),
                 modifier = Modifier.padding( end = 55.dp),
 
-                lineHeight = 45.sp
+                lineHeight = 55.sp,
             )
             Text(
                 buildAnnotatedString { append("Have an arcane day!") },
@@ -1116,7 +1115,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                 color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                 modifier = Modifier
-                    .absoluteOffset(x = 0.dp, y = (-55).dp),
+                    .absoluteOffset(x = 0.dp, y = (-58).dp),
             )
             Column(
                 verticalArrangement = Arrangement.Center,
@@ -1201,14 +1200,14 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                         .scale(3f)
 
                 )
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 if(state.value.daily_cards.isEmpty()) {
-                   Column(
+                   LazyColumn(
                        modifier = Modifier
                            .fillMaxSize(),
                        horizontalAlignment = Alignment.CenterHorizontally,
-                   ) {
+                   ) {item{
                        Image(
                            painter = painterResource(id = R.drawable.witchy_stuff),
                            contentDescription = "divider",
@@ -1226,11 +1225,12 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                            ),
                            modifier = Modifier
+                               .absoluteOffset(x = 0.dp, y = (-30).dp)
                                .padding(0.dp),
                            textAlign = TextAlign.Center
                        )
 
-                   }
+                   }}
                 }else {
                     LazyColumn(
                         state = lazyColumnState,

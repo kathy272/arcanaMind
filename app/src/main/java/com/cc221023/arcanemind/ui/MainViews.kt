@@ -2296,7 +2296,6 @@ fun CardDetailScreen(
 
                     }
                 }
-                // Add more components to display card details
             }
         }
     }

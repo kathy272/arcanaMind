@@ -198,9 +198,10 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     onClick = { navController.navigate(Screens.Info.route) },
                     icon = {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.cardsicon),
+                            imageVector = ImageVector.vectorResource(id = R.drawable.iconinfo),
                             contentDescription = "information about tarot cards",
                             modifier = Modifier.size(50.dp, 34.dp)
+                                .scale(1.4f)
 
                         )
                     },
@@ -236,11 +237,11 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     onClick = { navController.navigate(Screens.Account.route) },
                     icon = {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.profileicon),
+                            imageVector = ImageVector.vectorResource(id = R.drawable.cardsicon),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(50.dp, 34.dp)
-                                .scale(1.2f)
+                                .scale(1f)
                         )
 
                     },
@@ -276,7 +277,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         .width(120.dp)
                 )
                 Text(
-                    "Profile",
+                    "History",
                     fontSize = 14.sp,
                     color = EggShelly,
                     textAlign = TextAlign.Center,

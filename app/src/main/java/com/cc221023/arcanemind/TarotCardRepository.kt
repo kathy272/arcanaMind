@@ -20,14 +20,14 @@ class TarotCardRepository(private val context: Context) {
         for (i in 0 until jsonArray.length()) {
             val jsonCard = jsonArray.getJSONObject(i)
             val tarotCard = pluckJsonCard(jsonCard)
-            tarotCard?.let {
+            tarotCard.let {
                 tarotCards.add(it)
             }
         }
         return tarotCards
     }
     //takes a single json object and returns a single TarotCard object
-    private fun pluckJsonCard(jsonObject: JSONObject): TarotCard? {
+    private fun pluckJsonCard(jsonObject: JSONObject): TarotCard {
         return TarotCard(
             jsonObject.getString("type"),
             jsonObject.getString("name_short"),

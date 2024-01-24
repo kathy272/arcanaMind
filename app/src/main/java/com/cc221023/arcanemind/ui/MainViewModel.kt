@@ -2,10 +2,8 @@ package com.cc221023.arcanemind.ui
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.cc221023.arcanemind.RandomDaily
 import com.cc221023.arcanemind.TarotCard
 import com.cc221023.arcanemind.TarotCardRepository

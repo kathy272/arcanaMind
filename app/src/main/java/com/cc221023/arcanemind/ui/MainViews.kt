@@ -1104,7 +1104,6 @@ fun HistoryScreen(mainViewModel: MainViewModel) {
 
 
     daily_cards.size
-    var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
     val state = mainViewModel.mainViewState.collectAsState()
     // Create a DateFormatter object for displaying date in specified format.
     // Now you can format the date using SimpleDateFormat

@@ -124,8 +124,8 @@ fun MainView(mainViewModel: MainViewModel) {
                 mainViewModel.selectScreen(Screens.Info)
                 InfoScreen(navController)
             }
-            composable(Screens.Account.route) {
-                mainViewModel.selectScreen(Screens.Account)
+            composable(Screens.History.route) {
+                mainViewModel.selectScreen(Screens.History)
                 mainViewModel.getAllDailyCards()
                 HistoryScreen(mainViewModel)
             }
@@ -237,8 +237,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         indicatorColor = EggShelly,
 
                         ),
-                    selected = (selectedScreen == Screens.Account),
-                    onClick = { navController.navigate(Screens.Account.route) },
+                    selected = (selectedScreen == Screens.History),
+                    onClick = { navController.navigate(Screens.History.route) },
                     icon = {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.cardsicon),

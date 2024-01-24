@@ -340,7 +340,7 @@ fun HomeScreen(navController: NavHostController) {
 
                         )
                 }
-                
+
                 Button(
                     onClick = {
                         navController.navigate(Screens.DrawDaily.route)
@@ -527,14 +527,19 @@ fun DrawDailyScreen(
                 textAlign = TextAlign.Center,
                 lineHeight = 55.sp
             )
-            Image(
-                painter = painterResource(id = R.drawable.handtarot),
-                contentDescription = "Tarot Card",
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .scale(1.3f)
-                    .padding(top = 10.dp)
-            )
+                    .size(250.dp, 250.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_wbg),
+                    contentDescription = "logo",
+                    modifier = Modifier
+                        .scale(1f)
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                )
+            }
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -1412,6 +1417,7 @@ fun EditCardModal(mainViewModel: MainViewModel) {
         var comment by rememberSaveable { mutableStateOf(randomCardState.comment) }
 
         AlertDialog(
+            modifier = Modifier.clip(RoundedCornerShape(20.dp)),
             onDismissRequest = {
                 mainViewModel.closeDialog()
             },

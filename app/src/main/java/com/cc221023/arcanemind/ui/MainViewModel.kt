@@ -31,14 +31,20 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
 
     private val _randomDailyState = MutableStateFlow(RandomDaily("",0,"","","","","",""))
     val randomDailyState: StateFlow<RandomDaily> = _randomDailyState.asStateFlow()
-    var dailyCards: List<RandomDaily> = emptyList()
 
+    //get minor arcana cards
+    private val _minorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val minorArcanaCards: StateFlow<List<TarotCard>> get() = _minorArcanaCards
 
-
+    //get major arcana cards
+    private val _majorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
+    val majorArcanaCards: StateFlow<List<TarotCard>> get() = _majorArcanaCards
 
 
     init { //to initalize the tarot cards when the app is opened
         tarotCards = tarotCardRepository.getTarotCardsFromJson()
+        loadMajorArcanaCards()
+        loadMinorArcanaCards()
     }
     fun fetchRandomTarotCard() { //to fetch a random card
         if (tarotCards.isNotEmpty()) {
@@ -67,19 +73,19 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
 
 
     fun saveRandomCard(dailyCard: RandomDaily) {
-        Log.d("APItest", "Tries saving")
+        //Log.d("APItest", "Tries saving")
         viewModelScope.launch {
-            Log.d("APItest","launched before insert, dailyCard: ${dailyCard}")
+            //Log.d("APItest","launched before insert, dailyCard: ${dailyCard}")
             withContext(Dispatchers.IO) {
                 dao.insert(dailyCard)
-                Log.d("APItest","launched after insert, dailyCard: ${dailyCard}")
+                //Log.d("APItest","launched after insert, dailyCard: ${dailyCard}")
 
             }
-            Log.d("APItest", "Saved Card: $dailyCard")
+            //Log.d("APItest", "Saved Card: $dailyCard")
 
             //check if its actually saved
             dao.getAllDailyCards().collect() { allRandomCards ->
-                Log.d("APItest", "All Random Cards: $allRandomCards")
+                //Log.d("APItest", "All Random Cards: $allRandomCards")
             }
         }
     }
@@ -100,9 +106,9 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
             Log.d("Delete","Clicked on delete, dailyCard: ${dailyCard}")
         }
         getAllDailyCards()
-        Log.d("Delete","get all cards")
+       // Log.d("Delete","get all cards")
     }
-
+//update
     fun updateRandomDailyCard(dailyCard: RandomDaily){
         viewModelScope.launch {
             dao.update(dailyCard)
@@ -115,37 +121,22 @@ class MainViewModel(private val dao: TarotDao, context: Context) : ViewModel() {
         _randomDailyState.value = dailyCard
         _mainViewState.update { it.copy(openDialog = true) }
     }
-    fun getNumberOfSavedCards(): LiveData<Int> {
-        return dao.getNumberOfSavedCards()
-    }
 
     fun closeDialog(){
         _mainViewState.update { it.copy(openDialog = false) }
     }
 
-    //get major arcana cards
-    private val _majorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
-    val majorArcanaCards: StateFlow<List<TarotCard>> get() = _majorArcanaCards
-    init {
-        loadMajorArcanaCards()
-    }
     private fun loadMajorArcanaCards() {
         viewModelScope.launch {
             _majorArcanaCards.value = tarotCardRepository.getMajorArcanaCards()
         }
     }
-    private val _minorArcanaCards = MutableStateFlow<List<TarotCard>>(emptyList())
-    val minorArcanaCards: StateFlow<List<TarotCard>> get() = _minorArcanaCards
-    init {
-        loadMinorArcanaCards()
-    }
+
     private fun loadMinorArcanaCards() {
         viewModelScope.launch {
             _minorArcanaCards.value = tarotCardRepository.getMinorArcanaCards()
         }
     }
-
-
 
     //Navigation
     fun selectScreen(screen: Screens){

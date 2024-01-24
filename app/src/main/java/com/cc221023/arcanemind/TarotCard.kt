@@ -1,6 +1,6 @@
 package com.cc221023.arcanemind
 
-import androidx.room.ColumnInfo
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

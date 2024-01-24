@@ -3,6 +3,7 @@ package com.cc221023.arcanemind
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+//for the database
 @Entity(tableName = "daily_cards")
 data class RandomDaily(
     val name: String = "",

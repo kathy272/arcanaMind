@@ -25,40 +25,21 @@ interface TarotDao {
     @Query("DELETE FROM tarot_cards")
     fun deleteAllCards()
 
+    //get all tarot cards from the database (API)
     @Query("SELECT * FROM tarot_cards ORDER BY id")
     fun getAllTarotCards(): LiveData<List<TarotCard>>
 
     @Query("SELECT * FROM tarot_cards WHERE id = :id")
     fun getTarotCard(id: Int): LiveData<TarotCard>
 
+    //get all daily cards from the database (saved cards)
     @Query("SELECT * FROM daily_cards")
     fun getAllDailyCards(): Flow<List<RandomDaily>>
 
     @Query("SELECT * FROM daily_cards WHERE id = :id")
     fun getDailyCard(id: Int): LiveData<RandomDaily>
 
-    @Query("SELECT COUNT(*) FROM daily_cards")
-    fun getNumberOfSavedCards(): LiveData<Int>
+
 
 
 }
-//@Dao
-//interface TarotDao {
-//    @Insert
-// fun getAllRandomCards(): LiveData<List<RandomDaily>>
-//    fun insert(tarot_card: TarotCard?)
-//
-//    @Update
-//    fun update(tarot_card: TarotCard?)
-//
-//    @Delete
-//    fun delete(tarot_card: TarotCard?)
-//
-//    @Query("DELETE FROM tarot_cards")
-//    fun deleteAllCards()
-//
-//    @Query("SELECT * FROM tarot_cards ORDER BY id")
-//    fun getAllTarotCards(): LiveData<List<TarotCard>>
-//
-//    @Query("SELECT * FROM tarot_cards WHERE id = :id")
-//    fun getTarotCard(id: Int): LiveData<TarotCard>}

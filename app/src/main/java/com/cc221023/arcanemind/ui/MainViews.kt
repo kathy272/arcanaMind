@@ -101,6 +101,7 @@ fun MainView(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val navController = rememberNavController()
 
+    //to not show the bottom bar on the DrawDailyResultScreen => only show it on the other screens
     val bottomBar: (@Composable () -> Unit) =
         if (state.value.selectedScreen != Screens.DrawDailyResult) {
             { BottomNavigationBar(navController, state.value.selectedScreen) }
@@ -108,8 +109,8 @@ fun MainView(mainViewModel: MainViewModel) {
             { }
         }
     Scaffold(
-     bottomBar = bottomBar
-    ) {
+        bottomBar = bottomBar
+    ) { it ->
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
@@ -117,17 +118,16 @@ fun MainView(mainViewModel: MainViewModel) {
         ) {
             composable(Screens.Home.route) {
                 mainViewModel.selectScreen(Screens.Home)
-                HomeScreen(mainViewModel, navController)
+                HomeScreen(navController)
             }
             composable(Screens.Info.route) {
                 mainViewModel.selectScreen(Screens.Info)
-                InfoScreen(mainViewModel, navController)
+                InfoScreen(navController)
             }
             composable(Screens.Account.route) {
                 mainViewModel.selectScreen(Screens.Account)
-                mainViewModel.getNumberOfSavedCards()
                 mainViewModel.getAllDailyCards()
-                AccountScreen(mainViewModel, navController)
+                HistoryScreen(mainViewModel)
             }
 
             composable(Screens.DrawDaily.route) {
@@ -155,11 +155,11 @@ fun MainView(mainViewModel: MainViewModel) {
             }
             composable(Screens.UnderstandingTarot.route) {
                 mainViewModel.selectScreen(Screens.UnderstandingTarot)
-                UnderstandingTarotScreen(mainViewModel, navController)
+                UnderstandingTarotScreen()
             }
             composable(Screens.Reading.route) {
                 mainViewModel.selectScreen(Screens.Reading)
-                ReadingScreen(mainViewModel, navController)
+                ReadingScreen()
             }
             composable(Screens.CardDetail.route) {
                 val nameShort = it.arguments?.getString("nameShort")
@@ -193,7 +193,7 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Black,
                         unselectedIconColor = EggShelly,
-                        indicatorColor =  EggShelly,
+                        indicatorColor = EggShelly,
                     ),
                     selected = (selectedScreen == Screens.Info),
                     onClick = { navController.navigate(Screens.Info.route) },
@@ -201,19 +201,20 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.iconinfo),
                             contentDescription = "information about tarot cards",
-                            modifier = Modifier.size(50.dp, 34.dp)
+                            modifier = Modifier
+                                .size(50.dp, 34.dp)
                                 .scale(1.4f)
 
                         )
                     },
 
-                )
+                    )
 
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Black,
                         unselectedIconColor = EggShelly,
-                        indicatorColor =  EggShelly,
+                        indicatorColor = EggShelly,
                     ),
                     selected = (selectedScreen == Screens.Home),
                     onClick = { navController.navigate(Screens.Home.route) },
@@ -221,19 +222,21 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.homeicon),
                             contentDescription = null,
-                            modifier = Modifier.size(50.dp, 34.dp).scale(1.2f)
+                            modifier = Modifier
+                                .size(50.dp, 34.dp)
+                                .scale(1.2f)
                         )
                     },
 
-                )
+                    )
 
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Black,
                         unselectedIconColor = EggShelly,
-                        indicatorColor =  EggShelly,
+                        indicatorColor = EggShelly,
 
-                    ),
+                        ),
                     selected = (selectedScreen == Screens.Account),
                     onClick = { navController.navigate(Screens.Account.route) },
                     icon = {
@@ -248,17 +251,17 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                     },
 
 
-                )
+                    )
             }
 
             Row(
                 modifier = Modifier
                     .background(color = Black)
                     .fillMaxWidth()
-                    .padding( bottom = 17.dp, start = 0.dp, end = 0.dp),
+                    .padding(bottom = 17.dp, start = 0.dp, end = 0.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
 
-            ) {
+                ) {
                 Text(
                     "Info",
                     fontSize = 14.sp,
@@ -292,9 +295,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
 }
 
 
-
 @Composable
-fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+fun HomeScreen(navController: NavHostController) {
 
     Box(
         modifier = Modifier
@@ -311,145 +313,153 @@ fun HomeScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
         )
-LazyColumn(
-    modifier = Modifier
-        .fillMaxSize()
-       // .background(color = Black)
-
-) {item{
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 25.dp, end = 25.dp, top = 30.dp, bottom = 5.dp)
-
-    ) {
-        Text(
-            buildAnnotatedString { append("Hello\nstranger!\n")   },
-            fontSize = 50.sp,
-            color = Color.White,
-            fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-            lineHeight = 55.sp,
+        LazyColumn(
             modifier = Modifier
-                .height(120.dp)
-        )
-        Text(
-            buildAnnotatedString { append("Have an arcane day!") },
-            fontSize = 20.sp,
-            color = MidGray,
-            fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-
-        )
-    }
-
-
-            Button(
-                onClick = {
-                    navController.navigate(Screens.DrawDaily.route)
-                },
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier
-                    .size(500.dp, 420.dp).absoluteOffset(0.dp, (-10).dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Black
-                ),
-                contentPadding = PaddingValues(bottom = 0.dp, top = 30.dp, start = 30.dp, end = 30.dp)
-            ) {
-                Box(
+                .fillMaxSize()
+        ) {
+            item {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .size(290.dp, 340.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(Black, PitchBlack)
-                            ), RoundedCornerShape(20.dp)
-                        )
-                        .zIndex(1f)
+                        .padding(start = 25.dp, end = 25.dp, top = 30.dp, bottom = 5.dp)
+
                 ) {
-                    Box( //for the border to look good
+                    Text(
+                        buildAnnotatedString { append("Hello\nstranger!\n") },
+                        fontSize = 50.sp,
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                        lineHeight = 55.sp,
+                        modifier = Modifier
+                            .height(120.dp)
+                    )
+                    Text(
+                        buildAnnotatedString { append("Have an arcane day!") },
+                        fontSize = 20.sp,
+                        color = MidGray,
+                        fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+
+                        )
+                }
+                
+                Button(
+                    onClick = {
+                        navController.navigate(Screens.DrawDaily.route)
+                    },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier
+                        .size(500.dp, 420.dp)
+                        .absoluteOffset(0.dp, (-10).dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Black
+                    ),
+                    contentPadding = PaddingValues(
+                        bottom = 0.dp,
+                        top = 30.dp,
+                        start = 30.dp,
+                        end = 30.dp
+                    )
+                ) {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .size(290.dp, 340.dp)
-                            .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
-                            .zIndex(1f)
-                    ) {}
-
-                    Image(
-                        painter = painterResource(id = R.drawable.tarotcardsrandom2),
-                        contentDescription = "tarot cards",
-                        modifier = Modifier
-                            .scale(1.3f)
-                            .absoluteOffset(x = 15.dp, y = (-65).dp)
-                            .zIndex(2f)
-
-                    )
-                    Text(
-                        "Daily card",
-                        fontSize = 22.sp,
-                        letterSpacing = 0.15.em,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        color = EggShelly,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 250.dp,start = 20.dp)
-
-                    )
-                    Text(
-                        "Draw a daily card to read your fortune!",
-                        fontSize = 14.sp,
-                        letterSpacing = 0.15.em,
-                        fontFamily = FontFamily(
-                            Font(
-                                R.font.artifika_regular,
-                                FontWeight.Light
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(Black, PitchBlack)
+                                ), RoundedCornerShape(20.dp)
                             )
-                        ),
+                            .zIndex(1f)
+                    ) {
+                        Box( //for the border to look good
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .size(290.dp, 340.dp)
+                                .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
+                                .zIndex(1f)
+                        ) {}
+
+                        Image(
+                            painter = painterResource(id = R.drawable.tarotcardsrandom2),
+                            contentDescription = "tarot cards",
+                            modifier = Modifier
+                                .scale(1.3f)
+                                .absoluteOffset(x = 15.dp, y = (-65).dp)
+                                .zIndex(2f)
+
+                        )
+                        Text(
+                            "Daily card",
+                            fontSize = 22.sp,
+                            letterSpacing = 0.15.em,
+                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            color = EggShelly,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 250.dp, start = 20.dp)
+
+                        )
+                        Text(
+                            "Draw a daily card to read your fortune!",
+                            fontSize = 14.sp,
+                            letterSpacing = 0.15.em,
+                            fontFamily = FontFamily(
+                                Font(
+                                    R.font.artifika_regular,
+                                    FontWeight.Light
+                                )
+                            ),
+                            color = White,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 290.dp, start = 25.dp)
+                        )
+                    }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .absoluteOffset(0.dp, (-20).dp)
+                        .padding(top = 0.dp, start = 30.dp, end = 30.dp, bottom = 0.dp)
+                        .clip(RoundedCornerShape(20.dp))
+
+                        .fillMaxWidth()
+                        .background(color = PitchBlack)
+                        .height(140.dp)
+                        .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                ) {
+
+                    Text(
+                        "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
+                                "~ Benebell Wen",
+                        textAlign = TextAlign.Center,
+                        fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
                         color = White,
+                        fontSize = 13.sp,
+                        lineHeight = 25.sp,
                         modifier = Modifier
+                            .padding(10.dp)
                             .fillMaxWidth()
-                            .padding(top = 290.dp, start = 25.dp,)
+
+
                     )
                 }
             }
-
-    Box( modifier = Modifier
-        .absoluteOffset(0.dp, (-20).dp)
-            .padding(top =0.dp, start = 30.dp, end = 30.dp, bottom = 0.dp)
-            .clip(RoundedCornerShape(20.dp))
-
-            .fillMaxWidth()
-            .background(color = PitchBlack)
-            .height(140.dp)
-            .border(1.dp, DarkGray, RoundedCornerShape(20.dp) )){
-
-        Text(
-            "Tarot helps us look within ourselves to understand our emotions, the reasoning behind our words and conduct, and the source of our conflicts. \n" +
-                    "~ Benebell Wen",
-            textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
-            color = White,
-            fontSize = 13.sp,
-            lineHeight = 25.sp,
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-
-
-        )
+        }
     }
-}}}}
-
-
+}
 
 
 @Composable
 fun DrawDailyScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
-) { val lazyColumnState = rememberLazyListState()
-    val scrollState = rememberScrollState()
-    Log.d("DrawDaily", "Switches Screens to DrawDailyScreen")
+) {
+    val lazyColumnState = rememberLazyListState()
+    rememberScrollState()
+    //Log.d("DrawDaily", "Switches Screens to DrawDailyScreen")
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -474,11 +484,12 @@ fun DrawDailyScreen(
             .padding(start = 5.dp, end = 25.dp, bottom = 25.dp)
             .absoluteOffset(x = 0.dp, y = 10.dp),
     ) {
-        Button(onClick = { navController.navigate(Screens.Home.route)},
+        Button(
+            onClick = { navController.navigate(Screens.Home.route) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
                 contentColor = EggShelly,
-                )
+            )
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.arrowback),
@@ -486,10 +497,11 @@ fun DrawDailyScreen(
                 tint = EggShelly,
                 modifier = Modifier
                     .size(50.dp, 50.dp)
-            )}
+            )
+        }
         Text(
             "Daily Card", textAlign = TextAlign.Center, color = White,
-            fontFamily = FontFamily(Font(R.font.almendra_regular, )),
+            fontFamily = FontFamily(Font(R.font.almendra_regular)),
             fontSize = 24.sp,
             letterSpacing = 0.15.em,
             modifier = Modifier
@@ -502,82 +514,89 @@ fun DrawDailyScreen(
             .zIndex(1f)
             .fillMaxWidth()
             .padding(top = 20.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
-    ) {item{
-        Text(
-            text = "Draw your daily card!",
-            color = White,
-            fontSize = 44.sp,
-            fontFamily = FontFamily(Font(R.font.almendra_bold,)),
-            modifier = Modifier.padding(top = 60.dp, start = 25.dp, end = 25.dp, bottom = 25.dp),
-            textAlign = TextAlign.Center,
-            lineHeight = 55.sp
-        )
-        Image(
-            painter = painterResource(id = R.drawable.handtarot),
-            contentDescription = "Tarot Card",
-            modifier = Modifier
-                .fillMaxWidth()
-                .scale(1.3f)
-                .padding(top = 10.dp)
-        )
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 15.dp, start = 25.dp, end = 25.dp)
-            // .size(60.dp, 500.dp),
-        ) {
+    ) {
+        item {
             Text(
-                text = "Get some insight about the day ahead:",
+                text = "Draw your daily card!",
                 color = White,
-                fontSize = 24.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+                fontSize = 44.sp,
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
+                modifier = Modifier.padding(
+                    top = 60.dp,
+                    start = 25.dp,
+                    end = 25.dp,
+                    bottom = 25.dp
+                ),
                 textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .padding(top = 0.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
-                    .fillMaxWidth()
+                lineHeight = 55.sp
             )
-
             Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "line",
+                painter = painterResource(id = R.drawable.handtarot),
+                contentDescription = "Tarot Card",
                 modifier = Modifier
-                    .scale(2.3f)
-
+                    .fillMaxWidth()
+                    .scale(1.3f)
+                    .padding(top = 10.dp)
             )
 
-            Box() {
-                Button(
-                    onClick = {
-                        mainViewModel.fetchRandomTarotCard()
-                        navController.navigate(Screens.DrawDailyResult.route)
-                    },
-                    shape = RoundedCornerShape(35.dp),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 15.dp, start = 25.dp, end = 25.dp)
+                // .size(60.dp, 500.dp),
+            ) {
+                Text(
+                    text = "Get some insight about the day ahead:",
+                    color = White,
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.almendra_regular, FontWeight.Light)),
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
+                        .padding(top = 0.dp, start = 25.dp, end = 25.dp, bottom = 25.dp)
                         .fillMaxWidth()
-                        .padding( top = 25.dp)
-                        .height(65.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = EggShelly,
-                        contentColor = Black,
-                        disabledContentColor = Black
-                    ),
                 )
-                {
-                    Text(
-                        buildAnnotatedString {
-                            append("Draw a card")
+
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = "line",
+                    modifier = Modifier
+                        .scale(2.3f)
+
+                )
+
+                Box() {
+                    Button(
+                        onClick = {
+                            mainViewModel.fetchRandomTarotCard()
+                            navController.navigate(Screens.DrawDailyResult.route)
                         },
-                        color = Black,
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        shape = RoundedCornerShape(35.dp),
                         modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 25.dp)
+                            .height(65.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = EggShelly,
+                            contentColor = Black,
+                            disabledContentColor = Black
+                        ),
                     )
+                    {
+                        Text(
+                            buildAnnotatedString {
+                                append("Draw a card")
+                            },
+                            color = Black,
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp,
+                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                            modifier = Modifier
+                        )
+                    }
                 }
             }
-        }}
+        }
     }
 }
 
@@ -599,7 +618,7 @@ fun DisplayDailyResultScreen(
 
     Log.d(
         "DisplayDaily",
-        "Switches Screens to DisplayDailyResultScreen, randomCardState: ${randomCardState}"
+        "Switches Screens to DisplayDailyResultScreen, randomCardState: $randomCardState"
     )
 
     Box(
@@ -648,7 +667,7 @@ fun DisplayDailyResultScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                randomCardState?.let { randomCard ->
+                randomCardState.let { randomCard ->
                     Log.d(
                         "DisplayDaily",
                         "Switches Screens to DisplayDailyResultScreen, randomCard: ${randomCard}"
@@ -675,8 +694,8 @@ fun DisplayDailyResultScreen(
                             .background(color = Color.White, RoundedCornerShape(20.dp))
                     ) {
                         AsyncImage(
-                            model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState?.nameShort}.jpg",
-                            contentDescription = "${randomCardState?.desc}",
+                            model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
+                            contentDescription = randomCardState.desc,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(shape = RoundedCornerShape(10.dp))
@@ -686,7 +705,7 @@ fun DisplayDailyResultScreen(
                     }
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(top = 20.dp,start = 25.dp, end = 25.dp)
+                        modifier = Modifier.padding(top = 20.dp, start = 25.dp, end = 25.dp)
                     ) {
                         Box(
                             modifier = Modifier
@@ -698,7 +717,7 @@ fun DisplayDailyResultScreen(
                                 .border(1.dp, DarkGray, RoundedCornerShape(20.dp)),
                         ) {
                             Text(
-                                text = "${randomCard.meaningUp}",
+                                text = randomCard.meaningUp,
                                 color = White,
                                 fontSize = 16.sp,
                                 textAlign = TextAlign.Start,
@@ -767,12 +786,12 @@ fun DisplayDailyResultScreen(
 
                         mainViewModel.saveRandomCard(
                             RandomDaily(
-                                name = randomCardState.name ?: "",
+                                name = randomCardState.name,
                                 id = 0,
-                                meaningUp = randomCardState.meaningUp ?: "",
-                                desc = randomCardState.desc ?: "",
+                                meaningUp = randomCardState.meaningUp,
+                                desc = randomCardState.desc,
                                 comment = comment.text,
-                                name_short = randomCardState.nameShort ?: "",
+                                name_short = randomCardState.nameShort,
 
                                 imgUrl = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
                                 date = formattedDate,
@@ -782,7 +801,8 @@ fun DisplayDailyResultScreen(
                     },
                     shape = RoundedCornerShape(35.dp),
                     modifier = Modifier
-                        .fillMaxWidth().padding(top = 10.dp, start = 25.dp, end = 25.dp)
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, start = 25.dp, end = 25.dp)
                         .height(65.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = EggShelly,
@@ -809,7 +829,7 @@ fun DisplayDailyResultScreen(
 
 
 @Composable
-fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+fun InfoScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -830,233 +850,237 @@ fun InfoScreen(mainViewModel: MainViewModel, navController: NavHostController) {
                 .fillMaxWidth()
                 .padding(start = 25.dp, top = 30.dp, end = 20.dp, bottom = 0.dp)
 
-        ) {item{
-            Text(
-                buildAnnotatedString {
-                    append("Your tarot\n"+
-                            "archive\n")
-                },
-                fontSize = 50.sp,
-                lineHeight = 55.sp,
-                color = White,
-                fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                modifier = Modifier
-            )
-
-            Text(
-                buildAnnotatedString {
-                    append("Stay educated!")
-                },
-                fontSize = 18.sp,
-                color = MidGray,
-                fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-                modifier = Modifier
-                    .absoluteOffset(x = 0.dp, y = (-65).dp)
-            )
-
-            Box(
-                modifier = Modifier
-                    .absoluteOffset(y = (-55).dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(color = PitchBlack)
-                    .fillMaxWidth()
-                    .height(170.dp)
-                    .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
-            ) {
+        ) {
+            item {
                 Text(
                     buildAnnotatedString {
-                        append("Here you can find information about tarot and the art of reading your card draws. For a more in depth interpretation the general meaning of the deck consisting of 87 cards  is split into the minor and major arcana.")
+                        append(
+                            "Your tarot\n" +
+                                    "archive\n"
+                        )
                     },
+                    fontSize = 50.sp,
+                    lineHeight = 55.sp,
                     color = White,
-                    textAlign = TextAlign.Justify,
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-                    modifier = Modifier.padding(15.dp)
-                )
-            }
-            Button(
-                onClick = { navController.navigate(Screens.UnderstandingTarot.route) },
-                shape = RoundedCornerShape(35.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(55.dp)
-                    .absoluteOffset(y = (-45).dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = EggShelly,
-                    contentColor = Black,
-                    disabledContentColor = Black
-                ),
-            )
-            {
-                Text(
-                    buildAnnotatedString {
-                        append("Understanding Tarot")
-                    },
-                    color = Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
                     modifier = Modifier
                 )
-            }
 
-            Button(
-                onClick = { navController.navigate(Screens.Reading.route) },
-                shape = RoundedCornerShape(35.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(65.dp)
-                    .absoluteOffset(y = (-35).dp)
-                    .clip(shape = RectangleShape),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = EggShelly,
-                    contentColor = Black,
-                    disabledContentColor = Black
-                ),
-            )
-            {
                 Text(
                     buildAnnotatedString {
-                        append("Reading the cards")
+                        append("Stay educated!")
                     },
-                    color = Black,
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    fontSize = 18.sp,
+                    color = MidGray,
+                    fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                     modifier = Modifier
+                        .absoluteOffset(x = 0.dp, y = (-65).dp)
                 )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom,
-                modifier = Modifier
-                    .absoluteOffset(y = (-20).dp)
-                    .height(250.dp)
-                    .fillMaxWidth()
-                    .clip(shape = RectangleShape),
-            ) {
-                Button(
-                    onClick = { navController.navigate(Screens.MinorArcana.route) },
-                    shape = RoundedCornerShape(20.dp),
+
+                Box(
                     modifier = Modifier
-                        .height(300.dp)
-                        .weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Black
+                        .absoluteOffset(y = (-55).dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(color = PitchBlack)
+                        .fillMaxWidth()
+                        .height(170.dp)
+                        .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
+                ) {
+                    Text(
+                        buildAnnotatedString {
+                            append("Here you can find information about tarot and the art of reading your card draws. For a more in depth interpretation the general meaning of the deck consisting of 87 cards  is split into the minor and major arcana.")
+                        },
+                        color = White,
+                        textAlign = TextAlign.Justify,
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
+                        modifier = Modifier.padding(15.dp)
                     )
-                )
-                {
-                    Box(
-                        modifier = Modifier
-                            .height(200.dp)
-                            .width(145.dp)
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(Black, PitchBlack)
-                                ), RoundedCornerShape(20.dp)
-                            )
-                            .zIndex(1f)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(0.dp)
-                                .width(145.dp)
-                                .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
-                                .zIndex(1f)
-                        ) {
-                        }
-                        Image(
-                            //painter = painterResource(id = R.drawable.tarotcards),
-                            painter = painterResource(id = R.drawable.hand_left),
-                            contentDescription = "tarot cards",
-                            modifier = Modifier
-                                .scale(1.5f)
-                                .absoluteOffset(x = (-20).dp, y = (-22).dp)
-                                .zIndex(2f)
-                        )
-                        //Spacer(modifier = Modifier.height(90.dp))
-                        Text(
-                            "The minor arcana",
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                            color = EggShelly,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .absoluteOffset(x = 15.dp, y = 120.dp)
-                            ,
-                            textAlign = TextAlign.Start
-                        )
-                    }
                 }
                 Button(
-                    onClick = { navController.navigate(Screens.MajorArcana.route) },
-                    shape = RoundedCornerShape(20.dp),
+                    onClick = { navController.navigate(Screens.UnderstandingTarot.route) },
+                    shape = RoundedCornerShape(35.dp),
                     modifier = Modifier
-                        .height(300.dp)
-                        .weight(1f),
+                        .fillMaxWidth()
+                        .height(55.dp)
+                        .absoluteOffset(y = (-45).dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Black
-                    )
+                        containerColor = EggShelly,
+                        contentColor = Black,
+                        disabledContentColor = Black
+                    ),
                 )
                 {
-                    Box(
+                    Text(
+                        buildAnnotatedString {
+                            append("Understanding Tarot")
+                        },
+                        color = Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
                         modifier = Modifier
-                            .padding(0.dp)
-                            .height(200.dp)
-                            .width(145.dp)
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(Black, PitchBlack)
-                                ), RoundedCornerShape(20.dp)
+                    )
+                }
+
+                Button(
+                    onClick = { navController.navigate(Screens.Reading.route) },
+                    shape = RoundedCornerShape(35.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(65.dp)
+                        .absoluteOffset(y = (-35).dp)
+                        .clip(shape = RectangleShape),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = EggShelly,
+                        contentColor = Black,
+                        disabledContentColor = Black
+                    ),
+                )
+                {
+                    Text(
+                        buildAnnotatedString {
+                            append("Reading the cards")
+                        },
+                        color = Black,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                        modifier = Modifier
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier
+                        .absoluteOffset(y = (-20).dp)
+                        .height(250.dp)
+                        .fillMaxWidth()
+                        .clip(shape = RectangleShape),
+                ) {
+                    Button(
+                        onClick = { navController.navigate(Screens.MinorArcana.route) },
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier
+                            .height(300.dp)
+                            .weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Black
+                        )
+                    )
+                    {
+                        Box(
+                            modifier = Modifier
+                                .height(200.dp)
+                                .width(145.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Black, PitchBlack)
+                                    ), RoundedCornerShape(20.dp)
+                                )
+                                .zIndex(1f)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(0.dp)
+                                    .width(145.dp)
+                                    .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
+                                    .zIndex(1f)
+                            ) {
+                            }
+                            Image(
+                                //painter = painterResource(id = R.drawable.tarotcards),
+                                painter = painterResource(id = R.drawable.hand_left),
+                                contentDescription = "tarot cards",
+                                modifier = Modifier
+                                    .scale(1.5f)
+                                    .absoluteOffset(x = (-20).dp, y = (-22).dp)
+                                    .zIndex(2f)
                             )
-                            .zIndex(1f)
-                    ) {
+                            //Spacer(modifier = Modifier.height(90.dp))
+                            Text(
+                                "The minor arcana",
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                                color = EggShelly,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .absoluteOffset(x = 15.dp, y = 120.dp),
+                                textAlign = TextAlign.Start
+                            )
+                        }
+                    }
+                    Button(
+                        onClick = { navController.navigate(Screens.MajorArcana.route) },
+                        shape = RoundedCornerShape(20.dp),
+                        modifier = Modifier
+                            .height(300.dp)
+                            .weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Black
+                        )
+                    )
+                    {
                         Box(
                             modifier = Modifier
                                 .padding(0.dp)
                                 .height(200.dp)
                                 .width(145.dp)
-                                .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(Black, PitchBlack)
+                                    ), RoundedCornerShape(20.dp)
+                                )
                                 .zIndex(1f)
-                        ) {}
-                        Image(
-                            // painter = painterResource(id = R.drawable.fourcards),
-                            painter = painterResource(id = R.drawable.hand_right),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(0.dp)
+                                    .height(200.dp)
+                                    .width(145.dp)
+                                    .border(1.dp, EggShelly, RoundedCornerShape(20.dp))
+                                    .zIndex(1f)
+                            ) {}
+                            Image(
+                                // painter = painterResource(id = R.drawable.fourcards),
+                                painter = painterResource(id = R.drawable.hand_right),
 
-                            contentDescription = "tarot cards",
-                            modifier = Modifier
-                                .scale(1.5f)
-                                .absoluteOffset(x = 35.dp, y = (-20).dp)
-                                .zIndex(2f)
-                        )
-                        //Spacer(modifier = Modifier.height(90.dp))
-                        Text(
-                            "The major arcana",
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                            color = EggShelly,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .absoluteOffset(x = 15.dp, y = 120.dp)
-                            ,
-                            textAlign = TextAlign.Start
-                        )
+                                contentDescription = "tarot cards",
+                                modifier = Modifier
+                                    .scale(1.5f)
+                                    .absoluteOffset(x = 35.dp, y = (-20).dp)
+                                    .zIndex(2f)
+                            )
+                            //Spacer(modifier = Modifier.height(90.dp))
+                            Text(
+                                "The major arcana",
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                                color = EggShelly,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .absoluteOffset(x = 15.dp, y = 120.dp),
+                                textAlign = TextAlign.Start
+                            )
+                        }
                     }
                 }
             }
         }
     }
-}}
+}
 
 @Composable
-fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController) {
+fun HistoryScreen(mainViewModel: MainViewModel) {
     val lazyColumnState = rememberLazyListState()
     var showDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val drawnCardsCount = mainViewModel.getNumberOfSavedCards()
+    var itemsWithDialog by remember { mutableStateOf(mapOf<RandomDaily, Boolean>()) }
+
+    LocalContext.current
+
 
     //to show only a short part of the text
 
@@ -1076,12 +1100,11 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
             text
         }
     }
-    val minorArcanaCards by mainViewModel.minorArcanaCards.collectAsState()
     val daily_cards: List<RandomDaily> = emptyList()
 
 
-    val numberOfCards= daily_cards.size
-var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
+    daily_cards.size
+    var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
     val state = mainViewModel.mainViewState.collectAsState()
     // Create a DateFormatter object for displaying date in specified format.
     // Now you can format the date using SimpleDateFormat
@@ -1103,28 +1126,28 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 25.dp, end = 25.dp, top = 30.dp, bottom = 25.dp)
+                .padding(start = 0.dp, end = 0.dp, top = 30.dp, bottom = 25.dp)
         ) {
             Text(
-                buildAnnotatedString { append("Hello, stranger!\n") },
+                buildAnnotatedString { append("Your History!\n") },
                 color = White,
                 fontSize = 50.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_bold,)),
-                modifier = Modifier.padding( end = 55.dp),
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
+                modifier = Modifier.padding(end = 75.dp, start = 25.dp),
 
                 lineHeight = 55.sp,
             )
             Text(
-                buildAnnotatedString { append("Have an arcane day!") },
+                buildAnnotatedString { append("Get all your last draws!") },
                 fontSize = 20.sp,
                 color = MidGray,
                 fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
-                modifier = Modifier
+                modifier = Modifier.padding(end = 25.dp, start = 25.dp)
                     .absoluteOffset(x = 0.dp, y = (-58).dp),
             )
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier
+                modifier = Modifier.padding(end = 25.dp, start = 25.dp)
                     .fillMaxWidth()
             ) {
                 Box(
@@ -1154,39 +1177,46 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                         .fillMaxWidth()
                         .scale(3f)
 
-                )
+                )}
                 Spacer(modifier = Modifier.height(10.dp))
 
-                if(state.value.daily_cards.isEmpty()) {
-                   LazyColumn(
-                       modifier = Modifier
-                           .fillMaxSize(),
-                       horizontalAlignment = Alignment.CenterHorizontally,
-                   ) {item{
-                       Image(
-                           painter = painterResource(id = R.drawable.witchy_stuff),
-                           contentDescription = "divider",
-                           modifier = Modifier
+                if (state.value.daily_cards.isEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.padding(end = 25.dp, start = 25.dp)
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        item {
+                            Image(
+                                painter = painterResource(id = R.drawable.witchy_stuff),
+                                contentDescription = "divider",
+                                modifier = Modifier
 
-                               .scale(1.2f)
+                                    .scale(1.2f)
 
-                       )
-                       Text(
-                           text = "Seems like you haven't drawn a card yet...",
-                           fontWeight = FontWeight.Bold,
-                           fontSize = 16.sp,
-                           style = TextStyle(
-                               color = White,
-                               fontFamily = FontFamily(Font(R.font.artifika_regular, FontWeight.Light)),
-                           ),
-                           modifier = Modifier
-                               .absoluteOffset(x = 0.dp, y = (-30).dp)
-                               .padding(0.dp),
-                           textAlign = TextAlign.Center
-                       )
+                            )
+                            Text(
+                                text = "Seems like you haven't drawn a card yet...",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                style = TextStyle(
+                                    color = White,
+                                    fontFamily = FontFamily(
+                                        Font(
+                                            R.font.artifika_regular,
+                                            FontWeight.Light
+                                        )
+                                    ),
+                                ),
+                                modifier = Modifier
+                                    .absoluteOffset(x = 0.dp, y = (-30).dp)
+                                    .padding(0.dp),
+                                textAlign = TextAlign.Center
+                            )
 
-                   }}
-                }else {
+                        }
+                    }
+                } else {
                     LazyColumn(
                         state = lazyColumnState,
                         horizontalAlignment = Alignment.Start,
@@ -1195,14 +1225,13 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                             .fillMaxSize()
 
                     ) {
-                      //  Log.d("allcardsRandom", "${state.value.daily_cards}")
+                        //  Log.d("allcardsRandom", "${state.value.daily_cards}")
                         items(
                             state.value.daily_cards.reversed()
-                        ) {RandomDaily ->
+                        ) { RandomDaily ->
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier
-                                    .padding(top = 15.dp)
+                                modifier = Modifier.padding(end = 25.dp, start = 25.dp, top = 15.dp)
                                     .clip(shape = RoundedCornerShape(20.dp))
                                     .size(700.dp, 80.dp)
                                     .background(
@@ -1282,9 +1311,8 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                                 Spacer(modifier = Modifier.width(20.dp))
                                 IconButton(
                                     onClick = {
-                                        Log.d("Delete", "Clicked on delete, it: ${RandomDaily}")
-                                        showDialog = true
-                                        itemToDelete = RandomDaily
+                                        itemsWithDialog = itemsWithDialog.toMutableMap().apply {
+                                            this[RandomDaily] = true}
                                     }
                                 ) {
                                     Icon(
@@ -1297,12 +1325,15 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                                         tint = White,
                                     )
                                 }
-                                if (showDialog) {
+                                if (itemsWithDialog[RandomDaily] == true) {
                                     AlertDialog(
                                         modifier = Modifier.clip(RoundedCornerShape(20.dp)),
                                         backgroundColor = Black,
                                         contentColor = White,
                                         onDismissRequest = {
+                                            itemsWithDialog = itemsWithDialog.toMutableMap().apply {
+                                                this[RandomDaily] = false
+                                            }
                                             // Handle dismiss if needed
                                             showDialog = false
                                         },
@@ -1325,10 +1356,10 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                                         confirmButton = {
                                             Button(
                                                 onClick = {
-                                                    itemToDelete?.let {
-                                                        mainViewModel.deleteButton(
-                                                            it
-                                                        )
+                                                    itemsWithDialog[RandomDaily]?.let { isDialogVisible ->
+                                                        if (isDialogVisible) {
+                                                            mainViewModel.deleteButton(RandomDaily)
+                                                        }
                                                     }
                                                     showDialog = false
                                                 },
@@ -1369,7 +1400,7 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
                         }
                     }
                 }
-            }
+
         }
     }
 }
@@ -1380,7 +1411,7 @@ var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
 fun EditCardModal(mainViewModel: MainViewModel) {
     val state = mainViewModel.mainViewState.collectAsState()
     val randomCardState by mainViewModel.randomDailyState.collectAsState()
-   // Log.d("EditCard","In EditCardModal, openDialog: ${state.value.openDialog}")
+    // Log.d("EditCard","In EditCardModal, openDialog: ${state.value.openDialog}")
 
     if (state.value.openDialog) {
         var comment by rememberSaveable { mutableStateOf(randomCardState.comment) }
@@ -1426,7 +1457,7 @@ fun EditCardModal(mainViewModel: MainViewModel) {
             confirmButton = {
                 Button(
                     onClick = {
-                      //  Log.d("EditCard","On confirm, ${randomCardState}")
+                        //  Log.d("EditCard","On confirm, ${randomCardState}")
                         mainViewModel.updateRandomDailyCard(
                             RandomDaily(
                                 randomCardState.name,
@@ -1489,8 +1520,8 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                 buildAnnotatedString { append("The major arcana!\n") },
                 color = White,
                 fontSize = 44.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_bold,)),
-                modifier = Modifier.padding( end = 55.dp),
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
+                modifier = Modifier.padding(end = 55.dp),
 
                 lineHeight = 45.sp
             )
@@ -1548,7 +1579,7 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
 
 
                 items((filteredCards)) { card ->
-                 //   Log.d("MajorArcana", "card: ${card.nameShort}")
+                    //   Log.d("MajorArcana", "card: ${card.nameShort}")
                     Button(
                         onClick = {
                             navController.navigate(Screens.CardDetail.createRoute(card.nameShort))
@@ -1559,7 +1590,7 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
 
-                        )
+                            )
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -1619,7 +1650,7 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
     var searchText by remember { mutableStateOf("") }
     val minorArcanaCards by mainViewModel.minorArcanaCards.collectAsState()
 
-   // Log.d("MinorArcana", "minorArcanaCards: $minorArcanaCards")
+    // Log.d("MinorArcana", "minorArcanaCards: $minorArcanaCards")
 
     Box(
         modifier = Modifier
@@ -1646,8 +1677,8 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                 buildAnnotatedString { append("The minor arcana!\n") },
                 color = White,
                 fontSize = 44.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_bold,)),
-                modifier = Modifier.padding( end = 55.dp),
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
+                modifier = Modifier.padding(end = 55.dp),
 
                 lineHeight = 45.sp
             )
@@ -1767,8 +1798,8 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
 
 
 @Composable
-fun UnderstandingTarotScreen(mainViewModel: MainViewModel, navController: NavHostController) {
-    val scrollState = rememberScrollState()
+fun UnderstandingTarotScreen() {
+    rememberScrollState()
     val lazyColumnState = rememberLazyListState()
     Box(
         modifier = Modifier
@@ -1798,7 +1829,7 @@ fun UnderstandingTarotScreen(mainViewModel: MainViewModel, navController: NavHos
                 buildAnnotatedString { append("About Tarot\n") },
                 color = White,
                 fontSize = 44.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_bold,)),
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
                 modifier = Modifier.padding(end = 55.dp),
 
                 lineHeight = 45.sp
@@ -1812,92 +1843,92 @@ fun UnderstandingTarotScreen(mainViewModel: MainViewModel, navController: NavHos
                     .absoluteOffset(x = 0.dp, y = (-55).dp),
             )
         }
-            LazyColumn(
-                state = lazyColumnState,
-                modifier = Modifier.fillMaxWidth().padding(top = 120.dp)
+        LazyColumn(
+            state = lazyColumnState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 120.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item() {
+                Text(
+                    "The story about the cards\n", color = EggShelly,
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                    fontSize = 20.sp,
+                    letterSpacing = 0.15.em,
+                    textAlign = TextAlign.Center,
 
-                ,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                item() {
-                    Text(
-                        "The story about the cards\n", color = EggShelly,
-                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                        fontSize = 20.sp,
-                        letterSpacing = 0.15.em,
-                        textAlign = TextAlign.Center,
-
-
-                        )
-
-                    Text(
-                        buildAnnotatedString {
-                            append("The tarot is a pack of playing cards, used from the mid-15th century in various parts of Europe to play games such as Italian tarocchini, French tarot and Austrian Königrufen, many of which are still played today. \n\n In the late 18th century, some tarot decks began to be used for divination via tarot card reading and cartomancy leading to custom decks developed for such occult purposes.\n")
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(10.dp)
 
                     )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
 
-                    )
-                    Text(
-                        buildAnnotatedString {
-                            append("Like common playing cards, the tarot has four suits (which vary by region: French suits in Northern Europe, Latin suits in Southern Europe, and German suits in Central Europe). \n \nEach suit has 14 cards, ten cards numbering from one (or Ace) to ten and four face cards (King, Queen, Knight, and Jack/Knave). In addition, the tarot has a separate 21-card trump suit and a single card known as the Fool. Depending on the game, the Fool may act as the top trump or may be played to avoid following suit.\n")
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(10.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
+                Text(
+                    buildAnnotatedString {
+                        append("The tarot is a pack of playing cards, used from the mid-15th century in various parts of Europe to play games such as Italian tarocchini, French tarot and Austrian Königrufen, many of which are still played today. \n\n In the late 18th century, some tarot decks began to be used for divination via tarot card reading and cartomancy leading to custom decks developed for such occult purposes.\n")
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(10.dp)
 
-                    )
-                    Text(
-                        buildAnnotatedString {
-                            append("François Rabelais gives tarau as the name of one of the games played by Gargantua in his Gargantua and Pantagruel; this is likely the earliest attestation of the French form of the name. \n \n Tarot cards are used throughout much of Europe to play card games. In English-speaking countries, where these games are largely unplayed, tarot cards are now used primarily for divinatory purposes. \nOccultists call the trump cards and the Fool the major arcana while the ten pip and four court cards in each suit are called minor arcana. \nThe cards are traced by some occult writers to ancient Egypt or the Kabbalah but there is no documented evidence of such origins or of the usage of tarot for divination before the 18th century.\n")
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(10.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
 
-                    )
-                }}
+                )
+                Text(
+                    buildAnnotatedString {
+                        append("Like common playing cards, the tarot has four suits (which vary by region: French suits in Northern Europe, Latin suits in Southern Europe, and German suits in Central Europe). \n \nEach suit has 14 cards, ten cards numbering from one (or Ace) to ten and four face cards (King, Queen, Knight, and Jack/Knave). In addition, the tarot has a separate 21-card trump suit and a single card known as the Fool. Depending on the game, the Fool may act as the top trump or may be played to avoid following suit.\n")
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(10.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
+
+                )
+                Text(
+                    buildAnnotatedString {
+                        append("François Rabelais gives tarau as the name of one of the games played by Gargantua in his Gargantua and Pantagruel; this is likely the earliest attestation of the French form of the name. \n \n Tarot cards are used throughout much of Europe to play card games. In English-speaking countries, where these games are largely unplayed, tarot cards are now used primarily for divinatory purposes. \nOccultists call the trump cards and the Fool the major arcana while the ten pip and four court cards in each suit are called minor arcana. \nThe cards are traced by some occult writers to ancient Egypt or the Kabbalah but there is no documented evidence of such origins or of the usage of tarot for divination before the 18th century.\n")
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(10.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
+
+                )
             }
-
         }
+    }
 
+}
 
 
 @Composable
-fun ReadingScreen(mainViewModel: MainViewModel, navController: NavHostController) {
-    val scrollState = rememberScrollState()
+fun ReadingScreen() {
+    rememberScrollState()
     val lazyColumnState = rememberLazyListState()
     Box(
         modifier = Modifier
@@ -1925,7 +1956,7 @@ fun ReadingScreen(mainViewModel: MainViewModel, navController: NavHostController
                 buildAnnotatedString { append("Reading the cards\n") },
                 color = White,
                 fontSize = 44.sp,
-                fontFamily = FontFamily(Font(R.font.almendra_bold,)),
+                fontFamily = FontFamily(Font(R.font.almendra_bold)),
                 modifier = Modifier.padding(end = 55.dp),
 
                 lineHeight = 45.sp
@@ -1939,163 +1970,164 @@ fun ReadingScreen(mainViewModel: MainViewModel, navController: NavHostController
                     .absoluteOffset(x = 0.dp, y = (-55).dp),
             )
         }
-            LazyColumn(
-                state = lazyColumnState,
-                modifier = Modifier.fillMaxWidth().padding(top = 200.dp)
+        LazyColumn(
+            state = lazyColumnState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 200.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item {
 
-                ,
-horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                item {
-
-                    Text(
-                        "Understanding the Cards\n", color = EggShelly,
-                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                        fontSize = 20.sp,
-                        letterSpacing = 0.15.em,
-                        textAlign = TextAlign.Center,
+                Text(
+                    "Understanding the Cards\n", color = EggShelly,
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                    fontSize = 20.sp,
+                    letterSpacing = 0.15.em,
+                    textAlign = TextAlign.Center,
 
 
                     )
 
-                    Text(
-                        buildAnnotatedString {
-                            append(
-                                "Major Arcana:\n" +
-                                        "These cards represent significant life events and spiritual lessons. Each card has a specific meaning and can indicate major life changes.\n" +
-                                        "\n" +
-                                        "Minor Arcana:\n" +
-                                        "These cards are divided into four suits: Cups (emotions), Wands (creativity and inspiration), Swords (intellect and conflict), and Pentacles (material aspects). Each suit has cards numbered from Ace to 10, along with four court cards (Page, Knight, Queen, King).\n"
-                            )
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(15.dp)
-                            .absoluteOffset(0.dp, (-15).dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
+                Text(
+                    buildAnnotatedString {
+                        append(
+                            "Major Arcana:\n" +
+                                    "These cards represent significant life events and spiritual lessons. Each card has a specific meaning and can indicate major life changes.\n" +
+                                    "\n" +
+                                    "Minor Arcana:\n" +
+                                    "These cards are divided into four suits: Cups (emotions), Wands (creativity and inspiration), Swords (intellect and conflict), and Pentacles (material aspects). Each suit has cards numbered from Ace to 10, along with four court cards (Page, Knight, Queen, King).\n"
+                        )
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .absoluteOffset(0.dp, (-15).dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
+
+                )
+                Text(
+                    "Conducting a Reading\n", color = EggShelly,
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                    fontSize = 20.sp,
+                    letterSpacing = 0.15.em,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    buildAnnotatedString {
+                        append(
+                            "Cleansing and Focusing\n" +
+
+                                    "Before a reading, take a moment to clear your mind.\n" + "\n" +
+                                    "Asking a Question:\n" +
+                                    "Formulate a clear and specific question in your mind. Tarot works best with focused and open-ended questions.\n"
+                        )
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(15.dp)
+                )
+
+
+
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
+
+                )
+                Text(
+                    "Interpreting the Cards\n", color = EggShelly,
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.15.em,
 
                     )
-                    Text(
-                        "Conducting a Reading\n", color = EggShelly,
-                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                        fontSize = 20.sp,
-                        letterSpacing = 0.15.em,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        buildAnnotatedString {
-                            append(
-                                "Cleansing and Focusing\n" +
+                Text(
+                    buildAnnotatedString {
+                        append(
 
-                                        "Before a reading, take a moment to clear your mind.\n" + "\n" +
-                                        "Asking a Question:\n" +
-                                        "Formulate a clear and specific question in your mind. Tarot works best with focused and open-ended questions.\n"
-                            )
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(15.dp)
-                    )
+                            "Consider the symbolism, imagery, and traditional meanings of the cards in relation to your question. \n" +
+                                    "\n" + "Intuition and Personal Connection:\n" +
 
+                                    "Trust your intuition. Your feelings and impressions while looking at the cards are important. Your personal connection with the deck will enhance the accuracy of your readings.\n"
+                        )
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(15.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
 
-
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
+                )
+                Text(
+                    "Additional Tips\n", color = EggShelly,
+                    fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    letterSpacing = 0.15.em,
 
                     )
-                    Text(
-                        "Interpreting the Cards\n", color = EggShelly,
-                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.15.em,
+                Text(
+                    buildAnnotatedString {
+                        append(
+                            "Practice Regularly:\n" +
 
-                    )
-                    Text(
-                        buildAnnotatedString {
-                            append(
+                                    "Tarot is a skill that improves with practice. Regularly work with your deck to strengthen your connection and interpretation skills.\n" +
+                                    "\n" + "Keep a Journal:\n" +
 
-                                "Consider the symbolism, imagery, and traditional meanings of the cards in relation to your question. \n" +
-                                        "\n" + "Intuition and Personal Connection:\n" +
+                                    "Record your readings and observations in a journal. This helps track your progress and understand patterns over time.\n" +
+                                    "\n" + "Respect the Cards:\n" +
 
-                                        "Trust your intuition. Your feelings and impressions while looking at the cards are important. Your personal connection with the deck will enhance the accuracy of your readings.\n"
-                            )
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(15.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
+                                    "Treat your tarot deck with respect. Some people like to store their cards in a special cloth or box to maintain their energy.\n"
+                        )
+                    },
+                    color = White,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
+                    modifier = Modifier.padding(15.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.dividercircle),
+                    contentDescription = "divider",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(3f)
+                        .padding(top = 5.dp, bottom = 10.dp)
 
-                    )
-                    Text(
-                        "Additional Tips\n", color = EggShelly,
-                        fontFamily = FontFamily(Font(R.font.almendra_bold, FontWeight.Light)),
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.15.em,
-
-                    )
-                    Text(
-                        buildAnnotatedString {
-                            append(
-                                "Practice Regularly:\n" +
-
-                                        "Tarot is a skill that improves with practice. Regularly work with your deck to strengthen your connection and interpretation skills.\n" +
-                                        "\n" + "Keep a Journal:\n" +
-
-                                        "Record your readings and observations in a journal. This helps track your progress and understand patterns over time.\n" +
-                                        "\n" + "Respect the Cards:\n" +
-
-                                        "Treat your tarot deck with respect. Some people like to store their cards in a special cloth or box to maintain their energy.\n"
-                            )
-                        },
-                        color = White,
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.asap_bold, FontWeight.Light)),
-                        modifier = Modifier.padding(15.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.dividercircle),
-                        contentDescription = "divider",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .scale(3f)
-                            .padding(top = 5.dp, bottom = 10.dp)
-
-                    )
-                }
+                )
             }
-
         }
 
-
     }
+
+
+}
 
 
 @Composable
@@ -2105,10 +2137,9 @@ fun CardDetailScreen(
     nameShort: String
 
 ) {
-    val majorArcanaCards by mainViewModel.majorArcanaCards.collectAsState()
-    val cardDetails = mainViewModel.fetchCardDetails(nameShort)
+    mainViewModel.fetchCardDetails(nameShort)
 
-    val scrollState = rememberScrollState()
+    rememberScrollState()
     val lazyColumnState = rememberLazyListState()
     val tarotCardState by mainViewModel.tarotCardState.collectAsState()
     Log.d(
@@ -2178,7 +2209,7 @@ fun CardDetailScreen(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        tarotCardState?.let { tarotCard ->
+                        tarotCardState.let { tarotCard ->
                             Text(
                                 text = " ${tarotCard.name}",
                                 color = White,

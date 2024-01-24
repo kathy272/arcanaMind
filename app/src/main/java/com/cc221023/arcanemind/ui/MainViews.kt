@@ -1083,7 +1083,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 
 
     val numberOfCards= daily_cards.size
-
+var itemToDelete by remember { mutableStateOf<RandomDaily?>(null) }
     val state = mainViewModel.mainViewState.collectAsState()
     // Create a DateFormatter object for displaying date in specified format.
     // Now you can format the date using SimpleDateFormat
@@ -1250,7 +1250,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                       //  Log.d("allcardsRandom", "${state.value.daily_cards}")
                         items(
                             state.value.daily_cards.reversed()
-                        ) {
+                        ) {RandomDaily ->
                             Row(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier
@@ -1263,7 +1263,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                         )
                                     )
                                     .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
-                                    .clickable { mainViewModel.editRandomDailyCard(it) }
+                                    .clickable { mainViewModel.editRandomDailyCard(RandomDaily) }
                             ) {
                                 Column(
                                     horizontalAlignment = Alignment.Start,
@@ -1281,7 +1281,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 
                                     ) {
                                         Text(
-                                            text = truncateName(it.name),
+                                            text = truncateName(RandomDaily.name),
                                             fontSize = 22.sp,
                                             color = White,
                                             fontFamily = FontFamily(
@@ -1296,7 +1296,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                         )
                                         Spacer(modifier = Modifier.width(20.dp))
                                         Text(
-                                            text = it.date,
+                                            text = RandomDaily.date,
                                             fontSize = 14.sp,
                                             color = White,
                                             fontFamily = FontFamily(
@@ -1315,7 +1315,7 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
 
                                     }
                                     Text(
-                                        text = truncateText(it.comment),
+                                        text = truncateText(RandomDaily.comment),
 
                                         fontSize = 16.sp,
                                         color = White,
@@ -1334,8 +1334,9 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                 Spacer(modifier = Modifier.width(20.dp))
                                 IconButton(
                                     onClick = {
-                                        Log.d("Delete", "Clicked on delete, it: ${it}")
+                                        Log.d("Delete", "Clicked on delete, it: ${RandomDaily}")
                                         showDialog = true
+                                        itemToDelete = RandomDaily
                                     }
                                 ) {
                                     Icon(
@@ -1376,7 +1377,11 @@ fun AccountScreen(mainViewModel: MainViewModel, navController: NavHostController
                                         confirmButton = {
                                             Button(
                                                 onClick = {
-                                                    mainViewModel.deleteButton(it)
+                                                    itemToDelete?.let {
+                                                        mainViewModel.deleteButton(
+                                                            it
+                                                        )
+                                                    }
                                                     showDialog = false
                                                 },
                                                 colors = ButtonDefaults.buttonColors(

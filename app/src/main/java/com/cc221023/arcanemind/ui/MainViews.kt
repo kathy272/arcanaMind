@@ -124,8 +124,8 @@ fun MainView(mainViewModel: MainViewModel) {
                 mainViewModel.selectScreen(Screens.Info)
                 InfoScreen(navController)
             }
-            composable(Screens.Account.route) {
-                mainViewModel.selectScreen(Screens.Account)
+            composable(Screens.History.route) {
+                mainViewModel.selectScreen(Screens.History)
                 mainViewModel.getAllDailyCards()
                 HistoryScreen(mainViewModel)
             }
@@ -237,8 +237,8 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
                         indicatorColor = EggShelly,
 
                         ),
-                    selected = (selectedScreen == Screens.Account),
-                    onClick = { navController.navigate(Screens.Account.route) },
+                    selected = (selectedScreen == Screens.History),
+                    onClick = { navController.navigate(Screens.History.route) },
                     icon = {
                         Icon(
                             imageVector = ImageVector.vectorResource(id = R.drawable.cardsicon),
@@ -297,7 +297,6 @@ fun BottomNavigationBar(navController: NavHostController, selectedScreen: Screen
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -442,8 +441,6 @@ fun HomeScreen(navController: NavHostController) {
                         modifier = Modifier
                             .padding(10.dp)
                             .fillMaxWidth()
-
-
                     )
                 }
             }
@@ -727,7 +724,7 @@ fun DisplayDailyResultScreen(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         }
 
         item {
@@ -891,7 +888,7 @@ fun InfoScreen(navController: NavHostController) {
                             append("Here you can find information about tarot and the art of reading your card draws. For a more in depth interpretation the general meaning of the deck consisting of 87 cards  is split into the minor and major arcana.")
                         },
                         color = White,
-                        textAlign = TextAlign.Justify,
+                        textAlign = TextAlign.Center,
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.asap_regular, FontWeight.Light)),
                         modifier = Modifier.padding(15.dp)
@@ -1399,7 +1396,6 @@ fun HistoryScreen(mainViewModel: MainViewModel) {
                         }
                     }
                 }
-
         }
     }
 }
@@ -1811,7 +1807,7 @@ fun UnderstandingTarotScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .scale(2.0f)
-                .alpha(0.5f)
+                .alpha(0.2f)
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
                 .blur(10.dp)
@@ -1921,7 +1917,6 @@ fun UnderstandingTarotScreen() {
             }
         }
     }
-
 }
 
 
@@ -1940,7 +1935,7 @@ fun ReadingScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .scale(2.0f)
-                .alpha(0.5f)
+                .alpha(0.2f)
                 .padding(16.dp)
                 .absoluteOffset(x = 20.dp, y = (-20).dp)
                 .blur(10.dp)
@@ -2124,8 +2119,6 @@ fun ReadingScreen() {
         }
 
     }
-
-
 }
 
 
@@ -2292,8 +2285,6 @@ fun CardDetailScreen(
                             }
                         }
                         Spacer(modifier = Modifier.height(20.dp))
-
-
                     }
                 }
             }

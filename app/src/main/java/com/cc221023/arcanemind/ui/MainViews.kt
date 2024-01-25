@@ -691,7 +691,7 @@ fun DisplayDailyResultScreen(
 
                         modifier = Modifier
                             .clip(shape = RoundedCornerShape(10.dp))
-                            .size(500.dp, 275.dp)
+                            .fillMaxWidth()
                             .padding(top = 20.dp, bottom = 0.dp, start = 130.dp, end = 130.dp)
                             .background(color = Color.White, RoundedCornerShape(20.dp))
                     ) {
@@ -699,10 +699,11 @@ fun DisplayDailyResultScreen(
                             model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
                             contentDescription = randomCardState.desc,
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxSize()
                                 .clip(shape = RoundedCornerShape(10.dp))
-                                .padding(10.dp)
-                                .zIndex(1f)
+                                .padding(11.dp)
+                                .zIndex(1f),
+
                         )
                     }
                     Column(

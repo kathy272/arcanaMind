@@ -426,7 +426,7 @@ fun HomeScreen(navController: NavHostController) {
 
                         .fillMaxWidth()
                         .background(color = PitchBlack)
-                        .height(140.dp)
+
                         .border(1.dp, DarkGray, RoundedCornerShape(20.dp))
                 ) {
 
@@ -1588,7 +1588,10 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                         },
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
-                            .size(700.dp, 300.dp),
+                         .height(320.dp),
+
+
+
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
 
@@ -1599,15 +1602,16 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                             verticalArrangement = Arrangement.Top,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(0.dp)
-
                         ) {
                             // Display image
                             Box(
                                 modifier = Modifier
-                                    .width(300.dp)
+                                    .fillMaxWidth()
+
+                                    .padding(top = 10.dp, bottom = 30.dp, start = 0.dp, end = 0.dp)
                                     .clip(shape = RoundedCornerShape(15.dp))
                                     .background(color = Color.White)
+                                    .weight(1f)
                             ) {
                                 Image(
                                     painter = rememberAsyncImagePainter(
@@ -1616,15 +1620,15 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                                     contentDescription = "Tarot Card",
                                     modifier = Modifier
 
-                                        .padding(start = 10.dp, end = 10.dp)
-                                        .size(200.dp, 225.dp)
+                                        .fillMaxSize()
+                                        .padding(start = 5.dp, end = 5.dp, top = 5.dp, bottom = 5.dp),
+                                    alignment = Alignment.Center
                                 )
                             }
-                            // Display card name
                             Text(
                                 text = card.name,
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 18.sp,
                                 fontFamily = FontFamily(
                                     Font(
                                         R.font.artifika_regular,
@@ -1633,9 +1637,9 @@ fun MajorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                                 ),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
-                                    .padding(top = 8.dp)
                                     .fillMaxWidth()
                                     .height(50.dp)
+                                    .absoluteOffset(x = 0.dp, y = (-15).dp)
                             )
                         }
                     }
@@ -1728,8 +1732,6 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                 columns = GridCells.Fixed(2), // Set the number of items in each row
                 modifier = Modifier
                     .fillMaxSize()
-                //.padding(start = 0.dp, end = 0.dp, top = 0.dp, bottom = 0.dp)
-                //.absoluteOffset(x = 0.dp, y = 20.dp),
             ) {
 
                 val filteredCards = minorArcanaCards.filter {
@@ -1752,15 +1754,18 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top,
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .height(320.dp),
 
-                        ) {
+
+                            ) {
                             // Display image
                             Box(
                                 modifier = Modifier
-                                    .width(300.dp)
+                                    .fillMaxWidth()
+                                    .padding(top = 10.dp, bottom = 30.dp, start = 0.dp, end = 0.dp)
                                     .clip(shape = RoundedCornerShape(15.dp))
                                     .background(color = Color.White)
+                                    .weight(1f)
                             ) {
                                 Image(
                                     painter = rememberAsyncImagePainter(
@@ -1769,15 +1774,15 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                                     contentDescription = "Tarot Card",
                                     modifier = Modifier
 
-                                        .padding(start = 10.dp, end = 10.dp)
-                                        .size(200.dp, 225.dp)
+                                        .fillMaxSize()
+                                        .padding(start = 5.dp, end = 5.dp, top = 5.dp, bottom = 5.dp),
                                 )
                             }
                             // Display card name
                             Text(
                                 text = card.name,
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 18.sp,
                                 fontFamily = FontFamily(
                                     Font(
                                         R.font.artifika_regular,
@@ -1786,9 +1791,9 @@ fun MinorArcanaScreen(mainViewModel: MainViewModel, navController: NavHostContro
                                 ),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
-                                    .padding(top = 8.dp)
                                     .fillMaxWidth()
                                     .height(50.dp)
+                                    .absoluteOffset(x = 0.dp, y = (-15).dp)
                             )
                         }
                     }
@@ -1828,11 +1833,11 @@ fun UnderstandingTarotScreen() {
                 .absoluteOffset(x = 0.dp, y = 20.dp),
         ) {
             Text(
-                buildAnnotatedString { append("About Tarot\n") },
+                buildAnnotatedString { append("Understanding Tarot\n") },
                 color = White,
                 fontSize = 44.sp,
                 fontFamily = FontFamily(Font(R.font.almendra_bold)),
-                modifier = Modifier.padding(end = 55.dp),
+                modifier = Modifier.padding(end = 10.dp),
 
                 lineHeight = 45.sp
             )
@@ -1849,7 +1854,7 @@ fun UnderstandingTarotScreen() {
             state = lazyColumnState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 120.dp),
+                .padding(top = 200.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item() {
@@ -2202,7 +2207,7 @@ fun CardDetailScreen(
                 state = lazyColumnState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 75.dp, start = 25.dp, end = 25.dp)
+                    .padding(top = 85.dp)
             ) {
                 item {
                     Column(
@@ -2226,8 +2231,8 @@ fun CardDetailScreen(
 
                                 modifier = Modifier
                                     .clip(shape = RoundedCornerShape(10.dp))
-                                    .size(500.dp, 300.dp)
-                                    .padding(top = 20.dp, bottom = 0.dp, start = 95.dp, end = 95.dp)
+                                    .fillMaxWidth()
+                                    .padding(top = 20.dp, bottom = 0.dp, start = 130.dp, end = 130.dp)
                                     .background(color = Color.White, RoundedCornerShape(20.dp))
 
                             ) {
@@ -2235,18 +2240,31 @@ fun CardDetailScreen(
                                     model = "https://sacred-texts.com/tarot/pkt/img/${tarotCardState.nameShort}.jpg",
                                     contentDescription = tarotCardState.desc,
                                     modifier = Modifier
-                                        .fillMaxWidth()
-
+                                        .fillMaxSize()
                                         .clip(shape = RoundedCornerShape(10.dp))
-                                        .padding(
-                                            top = 10.dp,
-                                            bottom = 10.dp,
-                                            start = 10.dp,
-                                            end = 10.dp
-                                        )
-                                        .zIndex(1f)
+                                        .padding(11.dp)
+                                        .zIndex(1f),
                                 )
                             }
+//                            Box(
+//
+//                                modifier = Modifier
+//                                    .clip(shape = RoundedCornerShape(10.dp))
+//                                    .fillMaxWidth()
+//                                    .padding(top = 20.dp, bottom = 0.dp, start = 130.dp, end = 130.dp)
+//                                    .background(color = Color.White, RoundedCornerShape(20.dp))
+//                            ) {
+//                                AsyncImage(
+//                                    model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
+//                                    contentDescription = randomCardState.desc,
+//                                    modifier = Modifier
+//                                        .fillMaxSize()
+//                                        .clip(shape = RoundedCornerShape(10.dp))
+//                                        .padding(11.dp)
+//                                        .zIndex(1f),
+//
+//                                    )
+//                            }
                             Spacer(modifier = Modifier.height(20.dp))
 
                             Column(

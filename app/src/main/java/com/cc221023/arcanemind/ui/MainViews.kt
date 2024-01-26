@@ -2246,25 +2246,7 @@ fun CardDetailScreen(
                                         .zIndex(1f),
                                 )
                             }
-//                            Box(
-//
-//                                modifier = Modifier
-//                                    .clip(shape = RoundedCornerShape(10.dp))
-//                                    .fillMaxWidth()
-//                                    .padding(top = 20.dp, bottom = 0.dp, start = 130.dp, end = 130.dp)
-//                                    .background(color = Color.White, RoundedCornerShape(20.dp))
-//                            ) {
-//                                AsyncImage(
-//                                    model = "https://sacred-texts.com/tarot/pkt/img/${randomCardState.nameShort}.jpg",
-//                                    contentDescription = randomCardState.desc,
-//                                    modifier = Modifier
-//                                        .fillMaxSize()
-//                                        .clip(shape = RoundedCornerShape(10.dp))
-//                                        .padding(11.dp)
-//                                        .zIndex(1f),
-//
-//                                    )
-//                            }
+
                             Spacer(modifier = Modifier.height(20.dp))
 
                             Column(
